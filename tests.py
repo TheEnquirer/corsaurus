@@ -14,7 +14,7 @@ breakpoint()
 
 # Cosmul seems to work better
 
-# a = wordvec.most_similar(positive=['king', 'woman'], negative=['man'], topn=3)
+# a = wordvec.most_similar(positive=['king', 'woman'], negative=['man'], topn=10)
 # print(a)
 
 
