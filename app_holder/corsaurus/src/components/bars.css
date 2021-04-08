@@ -21,6 +21,10 @@
 
 
 .word {
+    font-size: 18px;
+    margin-top: -4px;
+    color: #8E8E8E;
+    font-family: 'Verdana';
     /*border: 1px solid red;*/
     /*width: 20px;*/
 }
@@ -30,6 +34,14 @@
     border-radius: 5px;
     height: 20px;
     background-image: linear-gradient(to right, #72CEAF, #A5FAFF 400px);
+    z-index: 10;
+    margin-left: -500px;
+}
+
+.bottom-gradient {
+    border-radius: 5px;
+    height: 20px;
+    background-image: linear-gradient(to right, #E8E8E8, #E8E8E8 400px);
 }
 
 

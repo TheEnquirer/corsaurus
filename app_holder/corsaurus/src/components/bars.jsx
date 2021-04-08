@@ -36,11 +36,18 @@ class Bars extends Component {
 			<div className="word-wrapper">
 			    <div className="word">{item[0]}</div>
 			</div>
+			<Spring native to={{width: 500}}>
+			    {props =>
+				<animated.div className="bottom-gradient" style={{...props}}>&nbsp;</animated.div>
+			    }
+			</Spring>
 			<Spring native to={{width: item[1] * 500}}>
 			    {props =>
 				<animated.div className="bar-gradient" style={{...props}}>&nbsp;</animated.div>
 			    }
 			</Spring>
+			{/*
+			*/}
 
 		    </div>
 		)) : ""}
