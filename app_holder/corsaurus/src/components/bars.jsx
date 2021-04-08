@@ -1,6 +1,7 @@
 import './bars.css';
+import { Spring, animated } from 'react-spring/renderprops';
 import React, { Component } from 'react';
-import autoBind from 'react-autobind'
+import autoBind from 'react-autobind';
 //const autoBind = require('auto-bind/react');
 
 class Bars extends Component {
@@ -28,12 +29,26 @@ class Bars extends Component {
     }
 
     render() {
-        return (
-            <div className="bars-wrapper">
+	return (
+	    <div className="bars-wrapper">
 		{this.state.mounted? this.state.data.map((item, i) =>  (
 		    <div className="bar-unit">
-			<p className="word">{item[0]}</p>
-			<div className="bar">{item[1]}</div>
+			<div className="word-wrapper">
+			    <div className="word">{item[0]}</div>
+			</div>
+			<Spring native to={{width: 500}}>
+			    {props =>
+				<animated.div className="bottom-gradient" style={{...props}}>&nbsp;</animated.div>
+			    }
+			</Spring>
+			<Spring native to={{width: item[1] * 500}}>
+			    {props =>
+				<animated.div className="bar-gradient" style={{...props}}>&nbsp;</animated.div>
+			    }
+			</Spring>
+			{/*
+			*/}
+
 		    </div>
 		)) : ""}
 
