@@ -1,6 +1,10 @@
 .bars-wrapper {
     display: flex;
     flex-direction: column;
+    /*border: 1px solid blue;*/
+    flex-shrink: 1;
+    /*width: 50%;*/
+
 }
 
 .bar-unit {
@@ -12,7 +16,7 @@
 
 .bar {
     height: 20px;
-    border: 1px solid grey;
+    /*border: 1px solid grey;*/
     /*width: 100%;*/
     margin-left: 10px;
     /*margin-top: 15px;*/
@@ -31,15 +35,16 @@
 
 
 .bar-gradient {
-    border-radius: 5px;
+    border-radius: 7px;
     height: 20px;
     background-image: linear-gradient(to right, #72CEAF, #A5FAFF 400px);
     z-index: 10;
+    /*position: absolute;*/
     margin-left: -500px;
 }
 
 .bottom-gradient {
-    border-radius: 5px;
+    border-radius: 7px;
     height: 20px;
     background-image: linear-gradient(to right, #E8E8E8, #E8E8E8 400px);
 }
