@@ -24,3 +24,13 @@
     /*width: 20px;*/
 }
 
+
+.bar-gradient {
+    border-radius: 5px;
+    height: 10px;
+    background-image: linear-gradient(to right, red, blue);
+    border: 1px solid red;
+}
+
+
+
