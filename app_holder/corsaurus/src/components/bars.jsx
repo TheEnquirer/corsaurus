@@ -31,24 +31,20 @@ class Bars extends Component {
     render() {
 	return (
 	    <div className="bars-wrapper">
-		<div  className="words-wrapper"> 
-		    {this.state.mounted? this.state.data.map((item, i) =>  (
-			<p className="word">{item[0]}</p>
-		    )) : ""}
-		</div>
-		<div className="gradient-wrapper">
-		    {this.state.mounted? this.state.data.map((item, i) =>  (
-			<div className="bar-unit">
-			    <div className="bar">
-				<Spring native to={{width: item[1]*1000}}>
-				    {props =>
-					<animated.div className="bar-gradient" style={{...props}}>&nbsp;</animated.div>
-				    }
-				</Spring>
-			    </div>
+		{this.state.mounted? this.state.data.map((item, i) =>  (
+		    <div className="bar-unit">
+			<div className="word-wrapper">
+			    <div className="word">{item[0]}</div>
 			</div>
-		    )) : ""}
-		</div>
+			<Spring native to={{width: item[1] * 500}}>
+			    {props =>
+				<animated.div className="bar-gradient" style={{...props}}>&nbsp;</animated.div>
+			    }
+			</Spring>
+
+		    </div>
+		)) : ""}
+
 	    </div>
         )
     }
