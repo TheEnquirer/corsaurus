@@ -3,3 +3,5 @@
 /app_holder/backend/data
 
 .DS_Store
+
+/app_holder/backend/__pycache__

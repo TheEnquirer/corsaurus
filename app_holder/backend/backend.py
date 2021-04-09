@@ -41,6 +41,18 @@ def query():
         pos = content['pos'] # array of words
         neg = content['neg'] # array of words
         return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+        '''
+        mode = content['mode'] # query mode
+        # sum words together
+        if mode == 'sum':
+            num = content['num'] # natural number
+            pos = content['pos'] # array of words
+            neg = content['neg'] # array of words
+            return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+        # find words similar to given word vector
+        elif mode == 'similar':
+            vec = content['vec'] # word vector
+        '''
     except:
         traceback.print_exc()
         return traceback.format_exc()
@@ -114,4 +126,24 @@ THIS IS MY NINJA WAY!
                   ██▓▓▓▓▓▓▓▓▓▓██                          ██████▓▓▓▓▓▓░░░░░░██      
                 ██▓▓░░░░░░░░████                                ██████████████      
                 ██████████████                                                                                                                           
+'''
+
+
+'''
+EXAMPLE CODE FOR QUERYING:
+fetch('BACKENDURL', { 
+  method: 'put', 
+  body: JSON.stringify(
+  {
+    'num': 10,
+    'pos': ['king', 'woman'],
+    'neg': ['man']
+  }),
+  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+})
+  .then(res =>
+  {
+    let val = JSON.parse(res.text());
+  })
+  .catch(err => err)
 '''
