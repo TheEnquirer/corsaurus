@@ -30,7 +30,14 @@ def query():
     #app.logger.info(query)
     print(query)
     load_model()
-    # TODO: actually do stuff w/ model and query
+    # TODO: decide on format of queries
+    '''
+    get these vars from query
+    num = query.
+    pos = query.
+    neg = query.
+    return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+    '''
     return jsonify(query)
 
 def load_model():
