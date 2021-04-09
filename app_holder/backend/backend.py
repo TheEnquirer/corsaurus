@@ -1,9 +1,10 @@
+# pylint: disable=no-member
 # * TO RUN THIS:
 '''
 First use this command:
 $ export FLASK_APP=backend.py
 
-Then, use this if you would like to enable dev mode:
+Then, use this if you would like to enable dev mode (live reloading):
 $ export FLASK_ENV=development
 
 Finally, use this if you want a local server:
@@ -24,38 +25,60 @@ from gensim.models import word2vec
 app = Flask(__name__)
 wordvec = None
 
+@app.route('/', methods=['GET'])
+def root():
+    app.logger.info('Hi :D')
+    return 'Hi :D'
+
 @app.route('/test', methods=['PUT'])
 def test():
     content = json.loads(request.data)
-    print(content)
+    app.logger.info(content)
     return jsonify(content)
 
 @app.route('/query', methods=['PUT'])
 def query():
+    app.logger.info('RECEIVED A QUERY.')
     try:
         #content = request.get_json()
         content = json.loads(request.data)
-        print(content)
+        app.logger.info(content)
         load_model()
-        num = content['num'] # natural number
-        pos = content['pos'] # array of words
-        neg = content['neg'] # array of words
-        return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
-        '''
         mode = content['mode'] # query mode
+        to_return = None
+
         # sum words together
         if mode == 'sum':
             num = content['num'] # natural number
             pos = content['pos'] # array of words
             neg = content['neg'] # array of words
-            return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
-        # find words similar to given word vector
+            to_return = jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+        # find words similar to given word 
         elif mode == 'similar':
-            vec = content['vec'] # word vector
-        '''
+            word = content['word'] 
+            to_return = jsonify(wordvec.most_similar(word))
+        # find distance between two words
+        elif mode == 'distance':
+            words = content['words']
+            to_return = jsonify(wordvec.distance(words[0], words[1]))
+        # find distance between one word and group of words
+        elif mode == 'distances':
+            word = content['word']
+            words = content['words']
+            to_return = jsonify(wordvec.distances(word, words))
+        # find outlier in group of words
+        elif mode == 'outlier':
+            words = content['words']
+            to_return = jsonify(wordvec.doesnt_match(words))
+
+        resp = app.Response(to_return)
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
     except:
-        traceback.print_exc()
-        return traceback.format_exc()
+        app.logger.error(traceback.format_exc())
+        resp = app.Response(traceback.format_exc())
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
 
 def load_model():
     if wordvec is None:
@@ -64,13 +87,28 @@ def load_model():
         del wv_model
     return wordvec
 
-   
-if __name__ == '__main__':
-    wordvec = load_model()
-    #app.run(debug=True)
-    # ^ commented out because we are using the commands at the top of this script
+app.logger.info('STARTING.')
+wordvec = load_model()
+app.logger.info('STARTED.')
 
-
+'''
+EXAMPLE CODE FOR QUERYING:
+fetch('BACKENDURL', { 
+  method: 'put', 
+  body: JSON.stringify(
+  {
+    'num': 10,
+    'pos': ['king', 'woman'],
+    'neg': ['man']
+  }),
+  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+})
+  .then(res =>
+  {
+    let val = JSON.parse(res.text());
+  })
+  .catch(err => err)
+'''
 
 '''       
 THIS IS MY NINJA WAY!                                                       
@@ -126,24 +164,4 @@ THIS IS MY NINJA WAY!
                   ██▓▓▓▓▓▓▓▓▓▓██                          ██████▓▓▓▓▓▓░░░░░░██      
                 ██▓▓░░░░░░░░████                                ██████████████      
                 ██████████████                                                                                                                           
-'''
-
-
-'''
-EXAMPLE CODE FOR QUERYING:
-fetch('BACKENDURL', { 
-  method: 'put', 
-  body: JSON.stringify(
-  {
-    'num': 10,
-    'pos': ['king', 'woman'],
-    'neg': ['man']
-  }),
-  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-})
-  .then(res =>
-  {
-    let val = JSON.parse(res.text());
-  })
-  .catch(err => err)
 '''
