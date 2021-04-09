@@ -3,10 +3,10 @@
 First use this command:
 $ export FLASK_APP=backend.py
 
-Then, this if you want a local server:
+Then, use this if you want a local server:
 $ flask run 
 
-Or this if you other computers on the network to be able to access it:
+Or use this if you want other computers on the network to be able to access the backend server:
 $ flask run --host=0.0.0.0
 '''
 
