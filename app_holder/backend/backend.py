@@ -1,3 +1,15 @@
+# * TO RUN THIS:
+'''
+First use this command:
+$ export FLASK_APP=backend.py
+
+Then, this if you want a local server:
+$ flask run 
+
+Or this if you other computers on the network to be able to access it:
+$ flask run --host=0.0.0.0
+'''
+
 import json
 from flask import Flask, request, jsonify
 from gensim.models import word2vec
@@ -5,16 +17,88 @@ from gensim.models import word2vec
 app = Flask(__name__)
 wordvec = None
 
-@app.route('/query', methods=['PUT'])
-def index():
+@app.route('/test', methods=['PUT'])
+def test():
     query = json.loads(request.data)
+    #app.logger.info(query)
     print(query)
     return jsonify(query)
 
-'''def load():
-    wv_model = word2vec.Word2Vec.load('./data/1billion_word_vectors/1billion_word_vectors')
-    wordvec = wv_model.wv
-    del wv_model
-    #breakpoint()'''
+@app.route('/query', methods=['PUT'])
+def query():
+    query = json.loads(request.data)
+    #app.logger.info(query)
+    print(query)
+    load_model()
+    # TODO: actually do stuff w/ model and query
+    return jsonify(query)
 
-app.run(debug=True)
+def load_model():
+    if wordvec is None:
+        wv_model = word2vec.Word2Vec.load('./data/1billion_word_vectors/1billion_word_vectors')
+        wordvec = wv_model.wv
+        del wv_model
+    return wordvec
+
+   
+if __name__ == '__main__':
+    wordvec = load_model()
+    #app.run(debug=True)
+    # ^ commented out because we are using the commands at the top of this script
+
+
+
+'''                                                              
+                                      ▓▓▓▓▓▓  ▓▓▓▓▓▓                                
+                                      ▓▓  ░░▓▓▓▓  ▓▓▓▓▓▓                            
+                                ▓▓▓▓▓▓▓▓░░  ░░▓▓░░░░▓▓▓▓  ▓▓                        
+                              ▒▒▓▓░░  ▓▓░░░░░░░░░░░░▓▓░░░░▓▓                        
+                                  ▒▒░░  ░░░░░░░░░░░░░░░░▓▓▓▓▒▒                      
+                                  ▓▓░░░░░░░░░░░░░░░░░░░░▓▓░░▓▓                      
+                ██████████    ▒▒▓▓░░░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░▓▓                      
+            ██████      ██████    ▓▓▓▓▓▓▓▓▓▓▓▓▒▒    ▒▒▒▒▒▒▓▓▓▓                      
+          ████              ████████▓▓▓▓▓▓▓▓▓▓▒▒    ▒▒  ▒▒▓▓                        
+        ████                  ██████░░  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                        
+                          ██████████░░  ░░░░░░██░░░░░░████                          
+                    ██████████    ██░░░░░░░░░░▒▒░░░░░░▒▒██                          
+              ██████████          ██░░░░░░░░░░░░░░░░░░░░██                          
+        ██████████                  ████░░░░░░░░░░░░░░░░██                          
+      ██████                          ████░░░░░░▒▒▒▒░░██                            
+    ████                              ██▓▓██░░░░░░░░██                              
+  ████                          ████████▓▓▓▓████████                                
+  ██                          ████▓▓▓▓▓▓████████▓▓██████                            
+  ██                        ████▓▓▓▓▓▓▓▓▓▓██████▓▓██▓▓▓▓██                          
+                          ▓▓████▓▓▓▓██▓▓▓▓▓▓▓▓██▓▓██▓▓██▓▓▓▓                        
+                        ████████▓▓▓▓██▓▓▓▓▓▓▓▓██▓▓██▓▓██▓▓██                        
+                      ██▓▓▓▓▓▓▓▓████████████████▓▓██████▓▓██                        
+                      ██▓▓██▓▓▓▓████▒▒░░░░  ░░░░▓▓██▒▒██▓▓██                        
+                    ██▓▓▓▓██████████▒▒  ░░░░    ▓▓██▒▒██▓▓████                      
+                    ██▓▓▓▓▓▓████  ██▒▒░░    ░░░░▓▓██▒▒▒▒██████                      
+                  ██▓▓▓▓▓▓▓▓██    ██▒▒░░░░      ▓▓██▒▒▒▒██▓▓██                      
+                  ██▓▓▓▓▓▓▓▓██    ██▒▒░░░░░░░░░░░░▓▓██▒▒██▓▓██                      
+                ██▓▓▓▓████▓▓██    ████▒▒░░    ░░░░▓▓██▒▒██▓▓▓▓██                    
+                ██▓▓██░░░░██        ████████▓▓▓▓▓▓▓▓████████▓▓▓▓████                
+                  ██░░░░████        ████████████████████████▓▓████░░████            
+                ██░░░░░░░░██        ██▒▒░░░░░░░░░░░░░░░░████▓▓██░░░░░░░░██          
+                ██░░░░░░░░░░██      ██░░    ░░░░░░░░░░░░░░░░████░░░░░░░░██          
+                ██░░░░░░░░░░██      ██▒▒░░░░    ░░░░██░░░░░░████░░░░░░██            
+                ██░░░░░░░░██      ██▒▒  ▒▒▒▒▒▒░░░░░░██░░░░░░░░████████              
+                  ████████        ██████    ▒▒▒▒████░░████░░░░██                    
+                                  ██    ████▒▒██  ████▒▒▒▒▒▒▒▒░░██                  
+                                ██░░░░░░  ▒▒▒▒██    ██▒▒▒▒▒▒▒▒░░░░██                
+                                ██░░░░░░▒▒▒▒██        ██▒▒▒▒▒▒▒▒░░██                
+                              ██░░░░░░▒▒▒▒▒▒██        ██▒▒▒▒▒▒▒▒░░██                
+                            ██░░░░░░░░▒▒▒▒██            ██▒▒▒▒▒▒▒▒░░██              
+                            ██░░░░░░▒▒▒▒▒▒██            ██▒▒▒▒▒▒▒▒░░██              
+                          ██░░░░░░▒▒▒▒▒▒██              ██▒▒▒▒▒▒░░░░██              
+                        ██░░░░░░▒▒▒▒▒▒██                ██▒▒▒▒▒▒▒▒░░██              
+                        ██░░░░░░▒▒▒▒▒▒██                ██▒▒▒▒▒▒▒▒░░██              
+                          ██░░▒▒▒▒▒▒██                    ████████████              
+                        ████████████                        ████████                
+                        ██▓▓▓▓████                          ██▓▓▓▓██                
+                      ████████████                        ██▓▓██████████            
+                    ██▓▓▓▓▓▓▓▓██                          ██▓▓▓▓▓▓▓▓▓▓▓▓████        
+                  ██▓▓▓▓▓▓▓▓▓▓██                          ██████▓▓▓▓▓▓░░░░░░██      
+                ██▓▓░░░░░░░░████                                ██████████████      
+                ██████████████                                                                                                                           
+'''
