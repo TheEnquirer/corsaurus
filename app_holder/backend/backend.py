@@ -3,14 +3,21 @@
 First use this command:
 $ export FLASK_APP=backend.py
 
-Then, use this if you want a local server:
-$ flask run 
+Then, use this if you would like to enable dev mode:
+$ export FLASK_ENV=development
+
+Finally, use this if you want a local server:
+$ flask run
 
 Or use this if you want other computers on the network to be able to access the backend server:
 $ flask run --host=0.0.0.0
+
+Oh, and if you want to go back to prod mode:
+$ export FLASK_ENV=production
 '''
 
 import json
+import traceback
 from flask import Flask, request, jsonify
 from gensim.models import word2vec
 
@@ -19,26 +26,24 @@ wordvec = None
 
 @app.route('/test', methods=['PUT'])
 def test():
-    query = json.loads(request.data)
-    #app.logger.info(query)
-    print(query)
-    return jsonify(query)
+    content = json.loads(request.data)
+    print(content)
+    return jsonify(content)
 
 @app.route('/query', methods=['PUT'])
 def query():
-    query = json.loads(request.data)
-    #app.logger.info(query)
-    print(query)
-    load_model()
-    # TODO: decide on format of queries
-    '''
-    get these vars from query
-    num = query.
-    pos = query.
-    neg = query.
-    return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
-    '''
-    return jsonify(query)
+    try:
+        #content = request.get_json()
+        content = json.loads(request.data)
+        print(content)
+        load_model()
+        num = content['num'] # natural number
+        pos = content['pos'] # array of words
+        neg = content['neg'] # array of words
+        return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+    except:
+        traceback.print_exc()
+        return traceback.format_exc()
 
 def load_model():
     if wordvec is None:
@@ -55,7 +60,8 @@ if __name__ == '__main__':
 
 
 
-'''                                                              
+'''       
+THIS IS MY NINJA WAY!                                                       
                                       ▓▓▓▓▓▓  ▓▓▓▓▓▓                                
                                       ▓▓  ░░▓▓▓▓  ▓▓▓▓▓▓                            
                                 ▓▓▓▓▓▓▓▓░░  ░░▓▓░░░░▓▓▓▓  ▓▓                        
