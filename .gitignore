@@ -1,7 +1,7 @@
 /data
 
-/app_holder/backend/data
+/app_holder/corsaurus/backend_/data
 
 .DS_Store
 
-/app_holder/backend/__pycache__
+/app_holder/corsaurus/backend_/__pycache__

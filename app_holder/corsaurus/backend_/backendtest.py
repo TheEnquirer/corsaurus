@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 import time
 from flask import Flask
 from flask_cors import CORS, cross_origin
@@ -10,15 +11,5 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def get_current_time():
     app.logger.info('hereee')
     return {'time': time.time()}
-
-@app.route('/time')
-@cross_origin()
-def get_current_time():
-    app.logger.info('hereee')
-    return {'time': time.time()}
-
-
-
-
 
 app.logger.info('sss')
