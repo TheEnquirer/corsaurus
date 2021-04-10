@@ -27,8 +27,7 @@ class Search extends Component {
 	}).catch((err) => console.error(err));
     }
 
-    componentDidMount() 
-    {
+    componentDidMount() {
 	this.setState({mounted: true})
 	this.makeRequest(
 	    {
@@ -40,11 +39,15 @@ class Search extends Component {
 	)
     }
 
-    render()
-    {
+    render() {
 	return (
 	    <div className="search-wrapper">
-		yooooo
+		<input className="search-input" 
+		    //value={this.state.projectObject.name} // TODO: jack this is hecka hacky
+		    //style={{transform: "transformY(-2px)"}}
+		    //ref={this.name}
+		/>
+
 	    </div>
 	)
     }
