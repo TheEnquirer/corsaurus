@@ -184,10 +184,10 @@ THIS IS MY NINJA WAY!
                 ██▓▓░░░░░░░░████                                ██████████████
                 ██████████████
 '''
-if __name__ == '__main__':
-    app.logger.info('1hereee')
-    print("hi")
-    # wordvec = load_model()
+# if __name__ == '__main__':
+app.logger.info('1hereee')
+print("hi")
+# wordvec = load_model()
 
-    app.run(debug=True)
+app.run(debug=True)
     # ^ commented out because we are using the commands at the top of this script

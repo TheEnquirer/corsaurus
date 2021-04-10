@@ -11,4 +11,14 @@ def get_current_time():
     app.logger.info('hereee')
     return {'time': time.time()}
 
+@app.route('/time')
+@cross_origin()
+def get_current_time():
+    app.logger.info('hereee')
+    return {'time': time.time()}
+
+
+
+
+
 app.logger.info('sss')
