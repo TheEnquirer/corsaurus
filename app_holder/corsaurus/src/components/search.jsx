@@ -16,6 +16,31 @@ class Search extends Component {
 
     componentDidMount() {
 	this.setState({mounted: true})
+	//fetch('http://127.0.0.1:5000/', { 
+	//    method: 'PUT', 
+	//    body: JSON.stringify(
+	//        {
+	//            'num': 10,
+	//            'pos': ['king', 'woman'],
+	//            'neg': ['man']
+	//        }),
+	//    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+	//})
+	//    .then(res =>
+	//        {
+	//            let val = JSON.parse(res.text());
+	//            console.log(val)
+	//        })
+	//        .catch(err => err)
+	//fetch('/test').then(data => {
+	//    console.log(data)
+	//});
+	//fetch('/time').then(data => {
+	//  console.log(data);
+	//});
+	fetch('http://localhost:5000/time').then(res => res.json()).then(data => {
+	    console.log(data.time);
+	});
     }
 
     render() {

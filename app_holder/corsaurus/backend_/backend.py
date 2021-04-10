@@ -40,11 +40,14 @@ def index():
     response.headers["Access-Control-Allow-Origin"] = "*"
     return response
 
-@app.route('/test', methods=['PUT'])
+@app.route('/test')
 def test():
+    print("and we go")
     content = json.loads(request.data)
-    app.logger.info(content)
-    return jsonify(content)
+    # app.logger.info(content)
+    app.logger.info("gahh")
+    # return jsonify(content)
+    return {'stuff': 4}
 
 @app.route('/query', methods=['PUT'])
 def query():
@@ -59,39 +62,37 @@ def query():
         pos = content['pos'] # array of words
         neg = content['neg'] # array of words
         return jsonify("skree")
-        # return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
-        '''
->>>>>>> Stashed changes
-        mode = content['mode'] # query mode
-        to_return = None
+    #     return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+    #     mode = content['mode'] query mode
+    #     to_return = None
 
-        # sum words together
-        if mode == 'sum':
-            num = content['num'] # natural number
-            pos = content['pos'] # array of words
-            neg = content['neg'] # array of words
-            to_return = jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
-        # find words similar to given word
-        elif mode == 'similar':
-            word = content['word']
-            to_return = jsonify(wordvec.most_similar(word))
-        # find distance between two words
-        elif mode == 'distance':
-            words = content['words']
-            to_return = jsonify(wordvec.distance(words[0], words[1]))
-        # find distance between one word and group of words
-        elif mode == 'distances':
-            word = content['word']
-            words = content['words']
-            to_return = jsonify(wordvec.distances(word, words))
-        # find outlier in group of words
-        elif mode == 'outlier':
-            words = content['words']
-            to_return = jsonify(wordvec.doesnt_match(words))
+    #     sum words together
+    #     if mode == 'sum':
+    #         num = content['num'] natural number
+    #         pos = content['pos'] array of words
+    #         neg = content['neg'] array of words
+    #         to_return = jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+    #     find words similar to given word
+    #     elif mode == 'similar':
+    #         word = content['word']
+    #         to_return = jsonify(wordvec.most_similar(word))
+    #     find distance between two words
+    #     elif mode == 'distance':
+    #         words = content['words']
+    #         to_return = jsonify(wordvec.distance(words[0], words[1]))
+    #     find distance between one word and group of words
+    #     elif mode == 'distances':
+    #         word = content['word']
+    #         words = content['words']
+    #         to_return = jsonify(wordvec.distances(word, words))
+    #     find outlier in group of words
+    #     elif mode == 'outlier':
+    #         words = content['words']
+    #         to_return = jsonify(wordvec.doesnt_match(words))
 
-        resp = app.Response(to_return)
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        return resp
+    #     resp = app.Response(to_return)
+    #     resp.headers['Access-Control-Allow-Origin'] = '*'
+    #     return resp
     except:
         app.logger.error(traceback.format_exc())
         resp = app.Response(traceback.format_exc())
@@ -107,11 +108,11 @@ def load_model():
     pass
 
 
-<<<<<<< Updated upstream
-app.logger.info('STARTING.')
-wordvec = load_model()
-app.logger.info('STARTED.')
+# app.logger.info('STARTING.')
+# wordvec = load_model()
+# app.logger.info('STARTED.')
 
+'''
 EXAMPLE CODE FOR QUERYING:
 fetch('BACKENDURL', {
   method: 'put',
