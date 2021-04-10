@@ -50,6 +50,11 @@ def query():
     try:
         #content = request.get_json()
         content = json.loads(request.data)
+        '''
+        content = request.data
+        content = content.decode("utf-8")
+        content = jsonify(content)
+        '''
         app.logger.info(content)
         load_model()
         mode = content['mode'] # query mode
@@ -96,7 +101,7 @@ app.logger.info('STARTED.')
 
 '''
 EXAMPLE CODE FOR QUERYING:
-fetch('BACKENDURL', {
+fetch('BACKENDURL/query', {
   method: 'put',
   body: JSON.stringify(
   {
@@ -107,11 +112,11 @@ fetch('BACKENDURL', {
   }),
   headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
 })
-  .then(res =>
+  .then((res) =>
   {
     let val = JSON.parse(res.text());
   })
-  .catch(err => err)
+  .catch((err) => console.error(err));
 '''
 
 

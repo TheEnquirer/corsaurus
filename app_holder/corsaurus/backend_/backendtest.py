@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 import time
 import json
 from flask import Flask, request, jsonify
