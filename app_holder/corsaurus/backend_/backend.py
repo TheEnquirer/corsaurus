@@ -27,7 +27,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-wordvec = None
+vecto = None
 
 @app.route('/', methods=['GET'])
 @cross_origin()
@@ -45,6 +45,7 @@ def test():
 @app.route('/query', methods=['PUT'])
 @cross_origin()
 def query():
+    global vecto
     app.logger.info('RECEIVED A QUERY.')
     try:
         #content = request.get_json()
@@ -58,24 +59,24 @@ def query():
             num = content['num'] # natural number
             pos = content['pos'] # array of words
             neg = content['neg'] # array of words
-            return jsonify(wordvec.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+            return jsonify(vecto.most_similar_cosmul(positive=pos, negative=neg, topn=num))
         # find words similar to given word 
         elif mode == 'similar':
             word = content['word'] 
-            return jsonify(wordvec.most_similar(word))
+            return jsonify(vecto.most_similar(word))
         # find distance between two words
         elif mode == 'distance':
             words = content['words']
-            return jsonify(wordvec.distance(words[0], words[1]))
+            return jsonify(vecto.distance(words[0], words[1]))
         # find distance between one word and group of words
         elif mode == 'distances':
             word = content['word']
             words = content['words']
-            return jsonify(wordvec.distances(word, words))
+            return jsonify(vecto.distances(word, words))
         # find outlier in group of words
         elif mode == 'outlier':
             words = content['words']
-            return jsonify(wordvec.doesnt_match(words))
+            return jsonify(vecto.doesnt_match(words))
         else:
           return {'message': 'You\'ve done goofed.'}
     except:
@@ -83,14 +84,14 @@ def query():
         return jsonify(traceback.format_exc())
 
 def load_model():
-    if wordvec is None:
-        wv_model = word2vec.Word2Vec.load('./data/1billion_word_vectors/1billion_word_vectors')
-        wordvec = wv_model.wv
-        del wv_model
-    return wordvec
+  global vecto
+  if vecto is None:
+    wv_model = word2vec.Word2Vec.load('./data/1billion_word_vectors/1billion_word_vectors')
+    vecto = wv_model.wv
+    del wv_model
 
 app.logger.info('STARTING.')
-wordvec = load_model()
+load_model()
 app.logger.info('STARTED.')
 
 '''
@@ -101,7 +102,8 @@ fetch('BACKENDURL', {
   {
     'num': 10,
     'pos': ['king', 'woman'],
-    'neg': ['man']
+    'neg': ['man'],
+    'mode': 'sum'
   }),
   headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
 })
