@@ -12,27 +12,32 @@ class Search extends Component {
 	this.state = { mounted: false, data: [] };
     }
 
+    parseString() {
+
+    }
+
+    makeRequest(request) {
+	fetch('http://localhost:5000/query', {
+	    method: 'put',
+	    body: JSON.stringify(request),
+	    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+	}).then(res => res.json()).then((data) => {
+	    console.log(data, "data");
+	    this.props.set(data)
+	}).catch((err) => console.error(err));
+    }
+
     componentDidMount() 
     {
 	this.setState({mounted: true})
-	fetch('http://localhost:5000/query', {
-	    method: 'put',
-	    body: JSON.stringify(
-		{
-		    'num': 10,
-		    'pos': ['king', 'woman'],
-		    'neg': ['food'],
-		    'mode': 'sum'
-		}),
-	    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-	})
-	    .then(res => res.json()).then((data) => 
-		{
-		    console.log(data, "data");
-		    //this.setState({data: data});
-		    this.props.set(data)
-		})
-		.catch((err) => console.error(err));
+	this.makeRequest(
+	    {
+		'num': 10,
+		'pos': ['king', 'woman'],
+		'neg': ['man'],
+		'mode': 'sum'
+	    }
+	)
     }
 
     render()
