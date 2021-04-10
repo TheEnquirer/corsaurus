@@ -1,5 +1,5 @@
 import './bars.css';
-import { Spring, animated } from 'react-spring/renderprops';
+import { Spring, animated } from 'react-spring';
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 //const autoBind = require('auto-bind/react');
@@ -41,7 +41,7 @@ class Bars extends Component
 	{
 		return (
 			<div className="bars-wrapper">
-			{this.state.mounted? this.state.data.map((item, i) => (
+			{this.state.mounted? this.props.data.map((item, i) => (
 				<div className="bar-unit">
 				<div className="word-wrapper">
 					<div className="word">{item[0]}</div>
