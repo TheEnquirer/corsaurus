@@ -32,62 +32,66 @@ vecto = None
 @app.route('/', methods=['GET'])
 @cross_origin()
 def root():
-    app.logger.info('Hi :D')
-    return 'Hi :D'
+  #app.logger.info('Hi :D')
+  return 'Hi :D'
 
 @app.route('/test', methods=['PUT'])
 @cross_origin()
 def test():
-    content = json.loads(request.data)
-    app.logger.info(content)
-    return jsonify(content)
+  content = json.loads(request.data)
+  #app.logger.info(content)
+  return jsonify(content)
 
 @app.route('/query', methods=['PUT'])
 @cross_origin()
 def query():
-    global vecto
-    app.logger.info('RECEIVED A QUERY.')
-    try:
-        #content = request.get_json()
-        content = json.loads(request.data)
-        '''
-        content = request.data
-        content = content.decode("utf-8")
-        content = jsonify(content)
-        '''
-        app.logger.info(content)
-        load_model()
-        mode = content['mode'] # query mode
+  global vecto
+  #app.logger.info('RECEIVED A QUERY.')
+  try:
+    #content = request.get_json()
+    content = json.loads(request.data)
+    '''
+    content = request.data
+    content = content.decode("utf-8")
+    content = jsonify(content)
+    '''
+    #app.logger.info(content)
+    load_model()
+    mode = content['mode'] # query mode
 
-        # sum words together
-        if mode == 'sum':
-            num = content['num'] # natural number
-            pos = content['pos'] # array of words
-            neg = content['neg'] # array of words
-            #return jsonify(vecto.most_similar_cosmul(positive=pos, negative=neg, topn=num))
-            return jsonify(vecto.most_similar(positive=pos, negative=neg, topn=num))
-        # find words similar to given word
-        elif mode == 'similar':
-            word = content['word']
-            return jsonify(vecto.most_similar(word))
-        # find distance between two words
-        elif mode == 'distance':
-            words = content['words']
-            return jsonify(vecto.distance(words[0], words[1]))
-        # find distance between one word and group of words
-        elif mode == 'distances':
-            word = content['word']
-            words = content['words']
-            return jsonify(vecto.distances(word, words))
-        # find outlier in group of words
-        elif mode == 'outlier':
-            words = content['words']
-            return jsonify(vecto.doesnt_match(words))
-        else:
-          return {'message': 'You\'ve done goofed.'}
-    except:
-        app.logger.error(traceback.format_exc())
-        return jsonify(traceback.format_exc())
+    # sum words together
+    if mode == 'sum':
+      num = content['num'] # natural number
+      pos = content['pos'] # array of words
+      neg = content['neg'] # array of words
+      #return jsonify(vecto.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+      return jsonify(vecto.most_similar(positive=pos, negative=neg, topn=num))
+    # find words similar to given word
+    elif mode == 'similar':
+      word = content['word']
+      return jsonify(vecto.most_similar(word))
+    # find distance between two words
+    elif mode == 'distance':
+      words = content['words']
+      return jsonify(vecto.distance(words[0], words[1]))
+    # find distance between one word and group of words
+    elif mode == 'distances':
+      word = content['word']
+      words = content['words']
+      return jsonify(vecto.distances(word, words))
+    # find outlier in group of words
+    elif mode == 'outlier':
+      words = content['words']
+      return jsonify(vecto.doesnt_match(words))
+    # find words similar to given vector
+    elif mode == 'similar_vector':
+      vector = content['vector']
+      return jsonify(vecto.similar_by_vector(vector))
+    else:
+      return jsonify(f'ERROR: You\'ve set the mode to \'{mode}\', which is invalid.')
+  except:
+    app.logger.error(traceback.format_exc())
+    return jsonify(f'ERROR: {traceback.format_exc()}')
 
 def load_model():
   global vecto
