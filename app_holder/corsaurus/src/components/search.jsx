@@ -59,7 +59,7 @@ class Search extends Component
 			{
 			  'num': 10,
 			  'pos': ['king', 'woman'],
-			  'neg': ['blue'],
+			  'neg': ['man'],
 			  'mode': 'sum'
 			}),
 			headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
@@ -76,7 +76,8 @@ class Search extends Component
 	{
 		return (
 	    	<div className="search-wrapper">
-			yooooo
+			From the backend:
+			<br></br>
 			{this.state.data}
 	    	</div>
         )
