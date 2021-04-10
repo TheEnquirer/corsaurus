@@ -12,8 +12,35 @@ class Search extends Component {
 	this.state = { mounted: false, data: [] };
     }
 
-    parseString() {
+    parseString(v) {
+	let pos = []
+	let neg = []
+	let lp = 0
+	let rp = 0
 
+	for (let i in v) {
+	    if (v[i] != '+') {
+		rp += 1;
+	    } else {
+
+	    }
+
+	    if(v[i] != '-') {
+		rp += 1;
+
+	    } else {
+
+	    }
+	}
+    }
+
+    handleTextChange(e) {
+    }
+
+    handleSubmit(e) {
+	if (e.key == "Enter") {
+	    this.parseString(e.target.value)
+	}
     }
 
     makeRequest(request) {
@@ -43,15 +70,13 @@ class Search extends Component {
 	return (
 	    <div className="search-wrapper">
 		<input className="search-input" 
-		    //value={this.state.projectObject.name} // TODO: jack this is hecka hacky
-		    //style={{transform: "transformY(-2px)"}}
-		    //ref={this.name}
+		    onChange={this.handleTextChange}
+		    onKeyDown={this.handleSubmit}
+		    placeholder={"king + woman - man"}
 		/>
-
 	    </div>
 	)
     }
 }
 
 export default Search;
-
