@@ -14,7 +14,7 @@ def get_current_time():
     data = request.data
     data = data.decode("utf-8")
     data = jsonify(data)
-    app.logger0info(data)
+    app.logger.info(data)
     # return {'time': time.time()}
     return data
 
@@ -23,5 +23,4 @@ def get_current_time():
 def query():
     app.logger.info('sss')
     return {'payload': 'ahahhahaha'}
-
 
