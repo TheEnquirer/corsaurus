@@ -12,16 +12,26 @@ class Bars extends Component
         autoBind(this);
 
         this.state = {
+	    //wid: -1,
 	    data: this.props.data,
 	    mounted: false,
 	};
     }
 
+    wid = -1
+
     processData() {
+	let widest = -1
 	let processed = this.props.data.map((item, i) => {
+	    widest = Math.max(widest, item[0].length)
 	    return [item[0].replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }), item[1]]
 	});
+	console.log(widest, "wid")
+	//this.setState({data: processed, wid: widest});
 	this.setState({data: processed});
+	//console.log(this.state.wid, "wids")
+	this.wid = widest*12
+	console.log(this.wid)
     };
 
     componentDidMount() {
@@ -35,31 +45,29 @@ class Bars extends Component
 	}
     }
 
-    render() 
-	{
-		return (
-			<div className="bars-wrapper">
-				    {console.log(this.state.data, "here")}
-			{this.state.mounted? this.state.data.map((item, i) => (
-				<div className="bar-unit">
-				<div className="word-wrapper">
-					<div className="word">{item[0]}</div>
-				</div>
-				<Spring native to={{width: 500}}>
-					{props =>
-					<animated.div className="bottom-gradient" style={{...props}}>&nbsp;</animated.div>
-					}
-				</Spring>
-				<Spring native to={{width: item[1] * 500}}>
-					{props =>
-					<animated.div className="bar-gradient" style={{...props}}>&nbsp;</animated.div>
-					}
-				</Spring>
-				</div>
-			)) : ""}
-
+    render() {
+	return (
+	    <div className="bars-wrapper">
+		{this.state.mounted? this.state.data.map((item, i) => (
+		    <div className="bar-unit">
+			<div className="word-wrapper" style={{width: this.wid}}>
+			    <div className="word">{item[0]}</div>
 			</div>
-        )
+			<Spring native to={{width: 500}}>
+			    {props =>
+			    <animated.div className="bottom-gradient" style={{...props}}>&nbsp;</animated.div>
+			    }
+			</Spring>
+			<Spring native to={{width: item[1] * 500}}>
+			    {props =>
+			    <animated.div className="bar-gradient" style={{...props}}>&nbsp;</animated.div>
+			    }
+			</Spring>
+		    </div>
+		)) : ""}
+
+	    </div>
+	)
     }
 }
 

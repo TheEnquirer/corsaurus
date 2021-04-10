@@ -52,6 +52,6 @@
 
 .word-wrapper {
     text-align: right;
-    width: 100px;
+    /*width: 500px;*/
     margin-right: 10px;
 }
