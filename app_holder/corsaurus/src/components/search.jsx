@@ -59,7 +59,7 @@ class Search extends Component
 			{
 			  'num': 10,
 			  'pos': ['king', 'woman'],
-			  'neg': ['man'],
+			  'neg': ['blue'],
 			  'mode': 'sum'
 			}),
 			headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},

@@ -64,7 +64,8 @@ def query():
             num = content['num'] # natural number
             pos = content['pos'] # array of words
             neg = content['neg'] # array of words
-            return jsonify(vecto.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+            #return jsonify(vecto.most_similar_cosmul(positive=pos, negative=neg, topn=num))
+            return jsonify(vecto.most_similar(positive=pos, negative=neg, topn=num))
         # find words similar to given word
         elif mode == 'similar':
             word = content['word']
