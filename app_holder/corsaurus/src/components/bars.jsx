@@ -8,16 +8,17 @@ class Bars extends Component
 {
     constructor(props) 
 	{
-        super(props);
-        autoBind(this);
+	    super(props);
+	    autoBind(this);
 
-        this.state = {
-            //wid: -1,
-            data: this.props.data,
-            mounted: false,
-            shown: 1,
-        };
-    }
+	    this.state = {
+		data: this.props.data,
+		mounted: false,
+		shown: 1,
+	    };
+
+	    this.more = React.createRef();
+	}
 
     wid = -1
 
@@ -63,13 +64,27 @@ class Bars extends Component
 			</Spring>
 		    </div>
 		)) : "nothing returned :("}
-		<p 
+		<div
+		    ref={this.more}
+		>
+		    <p 
 		    className="arrow"
 		    onClick={() => {
 			console.log(this.state.shown*10, this.state.data.length)
-			if (this.state.shown*10 <= this.state.data.length) { this.setState({shown: this.state.shown + 1}) }
+			if (this.state.shown*10 <= this.state.data.length) { 
+			    this.setState({shown: this.state.shown + 1}, () => {
+				if (this.more) {
+				    this.more.current.scrollIntoView({
+					behavior: "smooth", 
+					block: "start",
+				    })
+				    console.log("scrolling")
+				}
+			    })
+			}
 		    }}
 		>{(this.state.shown*10 <= this.state.data.length)? "▼" : "∅"} </p>
+		</div>
 
 	    </div>
 	)

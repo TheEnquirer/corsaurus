@@ -11,6 +11,7 @@ class Search extends Component
 	autoBind(this);
 
 	this.state = { mounted: false, data: [] };
+	this.more = React.createRef(); 
     }
 
     parseString(v) 
