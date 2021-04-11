@@ -9,10 +9,11 @@
     /*margin-top: 100px;*/
     height: 43px;
     width: 40%;
-    border-radius: 9px;
-    border: 1px solid #DDDDDD;
+    border-radius: 11px;
+    /*border: 1px solid #DDDDDD;*/
+    border: 0px solid #DDDDDD;
     outline: 0;
-    background-color: transparent;
+    background-color: #FDFDFD;
     /*background: transparent;*/
     margin-bottom: 20px;
     font-size: 20px;
@@ -21,12 +22,26 @@
     padding-right: 15px;
     font-weight: lighter;
     transition: 0.3s;
+    box-shadow: 0px 0px 19px -12px rgba(0,0,0,0.34);
+    -webkit-box-shadow: 0px 0px 19px -12px rgba(0,0,0,0.34);
+    -moz-box-shadow: 0px 0px 19px -12px rgba(0,0,0,0.34);
 }
 
 .search-input:hover {
-    background-color: #F1F1F1;
+    /*background-color: #F5FAF9;*/
+    /*box-shadow: -2px 0px 19px -9px rgba(255, 255, 255, 255, .34);*/
+    /*-webkit-box-shadow: -2px 0px 19px -9px rgba(255, 255, 255, 255, .34));*/
+    /*-moz-box-shadow: -2px 0px 19px -9px rgba(255, 255, 255, 255, .34);*/
+    transform: scale(1.01);
 }
 
 .search-input:focus {
-    background-color: #F4F4F4 !important;
+    /*transform: scale(1.01, 1.2);*/
+    /*height: 42px !important;*/
+    width: calc(40% + 20px) !important;
+    /*box-shadow: 0px 0px 19px -12px rgba(0,0,0,0.83);*/
+    /*-webkit-box-shadow: 0px 0px 19px -12px rgba(0,0,0,0.83);*/
+    /*-moz-box-shadow: 0px 0px 19px -12px rgba(0,0,0,0.83);*/
+    /*[>background-color: #F4F4F4 !important;<]*/
+
 }
