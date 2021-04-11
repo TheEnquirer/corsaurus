@@ -4,8 +4,9 @@
     justify-content: center;
 
 }
+
 .search-input {
-    margin-top: 100px;
+    /*margin-top: 100px;*/
     height: 43px;
     width: 40%;
     border-radius: 9px;
@@ -13,7 +14,7 @@
     outline: 0;
     background-color: transparent;
     /*background: transparent;*/
-    margin-bottom: 100px;
+    margin-bottom: 20px;
     font-size: 20px;
     color: #8A8A8A;
     padding-left: 15px;
@@ -21,8 +22,6 @@
     font-weight: lighter;
     transition: 0.3s;
 }
-
-
 
 .search-input:hover {
     background-color: #F1F1F1;

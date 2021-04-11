@@ -1,5 +1,5 @@
 .main {
-    color: #0C0C0C;
+    color: #121212;
     /*border: 1px solid green;*/
     height: 100%;
     /*display: flex;*/
@@ -15,6 +15,15 @@
     /*border: 1px solid red;*/
     /*margin-left: 500px;*/
     /*align: center;*/
+}
 
-
+h1 {
+    font-size: 69px;
+    background: -webkit-linear-gradient(315deg, #72CEAF, #A5FAFF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    justify-content: center;
+    display: flex;
+    margin-bottom: 25px;
 }

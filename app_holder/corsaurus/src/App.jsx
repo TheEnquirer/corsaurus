@@ -27,6 +27,7 @@ class App extends Component
 	{
 		return (
 			<div className="main">
+				<h1>Corsaurus</h1>
 				<Search
 					set={this.setData}
 				/>
