@@ -20,30 +20,18 @@ $ export FLASK_ENV=production
 import json
 import traceback
 from flask import Flask, request, jsonify
-from flask_cors import CORS, cross_origin
 from gensim.models import word2vec
 
-app = Flask(__name__)
-cors = CORS(app)
+app = Flask(__name__, static_folder='../build', static_url_path='/')
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 vecto = None
 
 @app.route('/', methods=['GET'])
-@cross_origin()
 def root():
-  #app.logger.info('Hi :D')
-  return 'Hi :D'
-
-@app.route('/test', methods=['PUT'])
-@cross_origin()
-def test():
-  content = json.loads(request.data)
-  #app.logger.info(content)
-  return jsonify(content)
+  return app.send_static_file('index.html')
 
 @app.route('/query', methods=['PUT'])
-@cross_origin()
 def query():
   global vecto
   #app.logger.info('RECEIVED A QUERY.')
@@ -179,20 +167,4 @@ THIS IS MY NINJA WAY!
                   ██▓▓▓▓▓▓▓▓▓▓██                          ██████▓▓▓▓▓▓░░░░░░██
                 ██▓▓░░░░░░░░████                                ██████████████
                 ██████████████
-
-
-
-
-
- ▒ ▒ ▒ ▒ ▒ █ █ █ █ █ █ █ █ █ █ █ █ █ █ █ ▒ ▒ ▒ ▒
- ▒ ▒ ▒ █ █ █ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ █ █ █ ▒ ▒
- ▒ ▒ █ █ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ █ ▒ ▒ █ ▒
- ▒ █ █ ▒ ▒ ▒ █ █ ▒ ▒ ▒ ▒ █ █ █ ▒ ▒ ▒ █ █ ▒ ▒ █ ▒
- ▒ ▒ ▒ ▒ █ █ █ █ █ ▒ ▒ █ ▒ ▒ █ ▒ ▒ █ █ █ ▒ █ █ ▒
- ▒ ▒ ▒ ▒ █ ▒ ▒ ▒ █ ▒ █ ▒ ▒ ▒ █ ▒ █ █ ▒ █ █ █ ▒ ▒
- ▒ ▒ ▒ █ ▒ ▒ ▒ ▒ █ █ ▒ ▒ ▒ ▒ █ █ █ ▒ █ █ █ ▒ ▒ ▒
- ▒ ▒ ▒ ▒ ▒ ▒ ▒ ▒ █ ▒ ▒ ▒ ▒ █ █ █ █ █ ▒ █ ▒ ▒ ▒ ▒
- ▒ ▒ ▒ ▒ ▒ ▒ ▒ █ █ ▒ ▒ ▒ ▒ █ █ ▒ █ █ ▒ █ ▒ ▒ ▒ ▒
- ▒ ▒ ▒ ▒ ▒ ▒ █ █ ▒ ▒ ▒ ▒ ▒ █ ▒ ▒ ▒ █ █ █ ▒ ▒ ▒ ▒
- ▒ ▒ ▒ ▒ ▒ █ █ ▒ ▒ ▒ ▒ ▒ █ █ ▒ ▒ ▒ ▒ ▒ █ ▒ ▒ ▒ ▒
 '''
