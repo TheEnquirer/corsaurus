@@ -47,7 +47,7 @@ class Bars extends Component
 	return (
 	    <div className="bars-wrapper">
 		{(this.state.mounted && this.state.data)? this.state.data.slice(0, 10*this.state.shown).map((item, i) => (
-		    <div className="bar-unit" style={{width: this.wid+550}}>
+		    <div className="bar-unit" style={{width: this.wid+620}}>
 			<div className="word-wrapper" style={{width: this.wid}}>
 			    <div className="word">{item[0]}</div>
 			</div>
@@ -66,9 +66,10 @@ class Bars extends Component
 		<p 
 		    className="arrow"
 		    onClick={() => {
-			this.setState({shown: this.state.shown + 1})
+			console.log(this.state.shown*10, this.state.data.length)
+			if (this.state.shown*10 <= this.state.data.length) { this.setState({shown: this.state.shown + 1}) }
 		    }}
-		>▼</p>
+		>{(this.state.shown*10 <= this.state.data.length)? "▼" : "∅"} </p>
 
 	    </div>
 	)

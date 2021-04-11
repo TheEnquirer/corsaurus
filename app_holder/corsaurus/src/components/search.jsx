@@ -33,7 +33,6 @@ class Search extends Component {
 	    }
 	    if (i == v.length - 1) { this.pusher(i+1) }
 	}
-	console.log(pos, neg, "whee")
 	return [pos, neg]
     }
 
@@ -64,7 +63,6 @@ class Search extends Component {
 	    body: JSON.stringify(request),
 	    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
 	}).then(res => res.json()).then((data) => {
-	    console.log(data, "data");
 	    this.props.set(data)
 	}).catch((err) => console.error(err));
     }
@@ -73,9 +71,9 @@ class Search extends Component {
 	this.setState({mounted: true})
 	this.makeRequest(
 	    {
-		'num': 10,
-		'pos': ['no'],
-		'neg': [],
+		'num': 100,
+		'pos': ['king', 'woman'],
+		'neg': ['man'],
 		'mode': 'sum'
 	    }
 	)
