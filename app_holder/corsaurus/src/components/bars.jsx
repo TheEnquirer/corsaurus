@@ -15,6 +15,7 @@ class Bars extends Component
 	    //wid: -1,
 	    data: this.props.data,
 	    mounted: false,
+	    shown: 1,
 	};
     }
 
@@ -26,12 +27,9 @@ class Bars extends Component
 	    widest = Math.max(widest, item[0].length)
 	    return [item[0].replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }), item[1]]
 	});
-	console.log(widest, "wid")
 	//this.setState({data: processed, wid: widest});
 	this.setState({data: processed});
-	//console.log(this.state.wid, "wids")
 	this.wid = widest*12
-	console.log(this.wid)
     };
 
     componentDidMount() {
@@ -48,8 +46,8 @@ class Bars extends Component
     render() {
 	return (
 	    <div className="bars-wrapper">
-		{this.state.mounted? this.state.data.map((item, i) => (
-		    <div className="bar-unit">
+		{(this.state.mounted && this.state.data)? this.state.data.slice(0, 10*this.state.shown).map((item, i) => (
+		    <div className="bar-unit" style={{width: this.wid+550}}>
 			<div className="word-wrapper" style={{width: this.wid}}>
 			    <div className="word">{item[0]}</div>
 			</div>
@@ -64,7 +62,13 @@ class Bars extends Component
 			    }
 			</Spring>
 		    </div>
-		)) : ""}
+		)) : "nothing returned :("}
+		<p 
+		    className="arrow"
+		    onClick={() => {
+			this.setState({shown: this.state.shown + 1})
+		    }}
+		>▼</p>
 
 	    </div>
 	)

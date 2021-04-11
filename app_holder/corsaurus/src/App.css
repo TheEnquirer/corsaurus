@@ -9,7 +9,7 @@
 .over-bars {
     display: flex;
     flex-direction: column;
-    position: absolute;
+    /*position: absolute;*/
     /*margin-left: 50%;*/
     /*margin-right: 50%;*/
     /*border: 1px solid red;*/

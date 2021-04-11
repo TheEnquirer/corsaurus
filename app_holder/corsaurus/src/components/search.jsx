@@ -49,7 +49,7 @@ class Search extends Component {
 	    let parsed = this.parseString(e.target.value)
 	    this.makeRequest( 
 		{
-		    'num': 10,
+		    'num': 100,
 		    'pos': parsed[0],
 		    'neg': parsed[1],
 		    'mode': 'sum'
