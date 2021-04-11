@@ -19,11 +19,20 @@
 
 h1 {
     font-size: 69px;
-    background: -webkit-linear-gradient(315deg, #72CEAF, #A5FAFF);
+    background: linear-gradient(to right bottom, #72CEAF, #A5FAFF);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     justify-content: center;
     display: flex;
     margin-bottom: 25px;
+}
+
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+    padding-top: 1px; /* don't question it */
+    top: 0;
+    z-index: 15;
+    background-color: #F8F8F8;
 }
