@@ -22,21 +22,21 @@ class Search extends Component
 
 		this.pusher = (i) => {
 			let mod = v.slice(lp, i).replace(/((?<!\\)[+-\\])+/, "").trim();
-			if (p == '+') { pos.push(mod) } else { neg.push(mod) }
+			if (p === '+') { pos.push(mod) } else { neg.push(mod) }
 		}
 
 		for (let i in v) 
 		{
-			if ((v[i-1] != "\\") && ((v[i] == '-') || (v[i] == '+'))) 
+			if ((v[i-1] !== "\\") && ((v[i] === '-') || (v[i] === '+'))) 
 			{
-				if (i != lp) 
+				if (i !== lp) 
 				{
 					this.pusher(i);
 					lp = i;
 				}
 				p = v[i];
 			}
-			if (i == v.length - 1) { this.pusher(i+1) }
+			if (i === v.length - 1) { this.pusher(i+1) }
 		}
 		return [pos, neg]
     }
@@ -47,7 +47,7 @@ class Search extends Component
 
     handleSubmit(e) 
 	{
-		if (e.key == "Enter") 
+		if (e.key === "Enter") 
 		{
 			let parsed = this.parseString(e.target.value);
 			this.makeRequest( 

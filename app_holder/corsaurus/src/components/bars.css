@@ -13,24 +13,13 @@
     flex-direction: row;
     margin-top: 25px;
     transition: 0.3s;
+    /*width: 50%;*/
 }
 
 .bar-unit:hover {
     transform: scale(1.02);
     /*background-color: #7B7B7B;*/
 }
-
-
-.bar {
-    height: 20px;
-
-    /*border: 1px solid grey;*/
-    /*width: 100%;*/
-    margin-left: 10px;
-    /*margin-top: 15px;*/
-    /*padding: 3px;*/
-}
-
 
 .word {
     font-size: 18px;
