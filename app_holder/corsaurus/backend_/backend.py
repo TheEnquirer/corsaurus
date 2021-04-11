@@ -50,39 +50,36 @@ def query():
     load_model()
     mode = content['mode'] # query mode
 
+    res = None
+
     # sum words together
-    if mode == 'sum':
-      num = content['num'] # natural number
-      pos = content['pos'] # array of words
-      neg = content['neg'] # array of words
-      #return jsonify(vecto.most_similar_cosmul(positive=pos, negative=neg, topn=num))
-      return jsonify(vecto.most_similar(positive=pos, negative=neg, topn=num))
-    # find words similar to given word
-    elif mode == 'similar':
-      word = content['word']
-      return jsonify(vecto.most_similar(word))
-    # find distance between two words
-    elif mode == 'distance':
-      words = content['words']
-      return jsonify(vecto.distance(words[0], words[1]))
-    # find distance between one word and group of words
-    elif mode == 'distances':
-      word = content['word']
-      words = content['words']
-      return jsonify(vecto.distances(word, words))
-    # find outlier in group of words
-    elif mode == 'outlier':
-      words = content['words']
-      return jsonify(vecto.doesnt_match(words))
-    # find words similar to given vector
-    elif mode == 'similar_vector':
-      vector = content['vector']
-      return jsonify(vecto.similar_by_vector(vector))
+    if mode == 'sum':                                                                   # find correlations
+      res = vecto.most_similar(
+        positive=content['pos'],
+        negative=content['neg'],
+        topn    =content['num']
+      )
+    elif mode == 'similar':                                                             # find words similar to given word
+      res = vecto.most_similar(content['word'])
+    elif mode == 'distance':                                                            # find distance between two words
+      res = vecto.distance(content['words'][0], content['words'][1])
+    elif mode == 'distances':                                                           # find distance between one word and group of words
+      res = vecto.distances(content['word'], content['words'])
+    elif mode == 'outlier':                                                             # find outlier in group of words
+      res = vecto.doesnt_match(content['words'])
+    elif mode == 'similar_vector':                                                      # find words similar to given vector
+      res = vecto.similar_by_vector(content['vector'])
+
+    if res is None:
+      return jsonify({ 'error': 'invalid_mode' })
     else:
-      return jsonify(f'ERROR: You\'ve set the mode to \'{mode}\', which is invalid.')
+      return jsonify({ 'success': res })
+
+  except KeyError:
+    return jsonify({ 'error': 'out_of_vocab' })
   except:
     app.logger.error(traceback.format_exc())
-    return jsonify(f'ERROR: {traceback.format_exc()}')
+    return jsonify({ 'error': '{traceback.format_exc()}' })
 
 def load_model():
   global vecto
@@ -114,7 +111,6 @@ fetch('BACKENDURL/query', {
   })
   .catch((err) => console.error(err));
 '''
-
 
 '''
 THIS IS MY NINJA WAY!

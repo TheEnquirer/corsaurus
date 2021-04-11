@@ -12,35 +12,35 @@ class Bars extends Component
         autoBind(this);
 
         this.state = {
-	    //wid: -1,
-	    data: this.props.data,
-	    mounted: false,
-	    shown: 1,
-	};
+            //wid: -1,
+            data: this.props.data,
+            mounted: false,
+            shown: 1,
+        };
     }
 
     wid = -1
 
     processData() {
-	let widest = -1
-	let processed = this.props.data.map((item, i) => {
-	    widest = Math.max(widest, item[0].length)
-	    return [item[0].replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }), item[1]]
-	});
-	//this.setState({data: processed, wid: widest});
-	this.setState({data: processed});
-	this.wid = widest*12
+        let widest = -1
+        let processed = this.props.data.map((item, i) => {
+            widest = Math.max(widest, item[0].length)
+            return [item[0].replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }), item[1]]
+        });
+        //this.setState({data: processed, wid: widest});
+        this.setState({data: processed});
+        this.wid = widest*12
     };
 
     componentDidMount() {
-	this.setState({mounted: true});
-	this.processData();
+        this.setState({mounted: true});
+        this.processData();
     }
 
     componentDidUpdate(prevProps, prevState) {
-	if (this.props !== prevProps) {
-	    this.processData()
-	}
+        if (this.props !== prevProps) {
+            this.processData()
+        }
     }
 
     render() {

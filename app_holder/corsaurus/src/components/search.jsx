@@ -70,7 +70,11 @@ class Search extends Component
 		})
 			.then(res => res.json()).then((data) => 
 			{
-				this.props.set(data)
+                if (data.hasOwnProperty('error')) {
+                    throw data.error;
+                } else {
+                    this.props.set(data.success)
+                }
 			})
 			.catch((err) => console.error(err));
     }
