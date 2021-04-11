@@ -74,4 +74,28 @@
     color: #7B7B7B;
 }
 
+.loader-container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
+.loader {
+    /* border and border-top must be the same */
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #A5FAFF; 
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s ease-in-out infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin: -22px auto auto -22px;
+    /*transform: translate(-50%, -50%);*/
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
