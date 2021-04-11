@@ -16,22 +16,25 @@ class Search extends Component {
 	let pos = []
 	let neg = []
 	let lp = 0
-	let rp = 0
+	let p = "+"
+
+	this.pusher = (i) => {
+	    let mod = v.slice(lp, i).replace(/((?<!\\)[+-\\])+/, "").trim()
+	    if (p == '+') { pos.push(mod) } else { neg.push(mod) }
+	}
 
 	for (let i in v) {
-	    if (v[i] != '+') {
-		rp += 1;
-	    } else {
-
+	    if ((v[i-1] != "\\") && ((v[i] == '-') || (v[i] == '+'))) {
+		if (i != lp) {
+		    this.pusher(i)
+		    lp = i
+		}
+		p = v[i]
 	    }
-
-	    if(v[i] != '-') {
-		rp += 1;
-
-	    } else {
-
-	    }
+	    if (i == v.length - 1) { this.pusher(i+1) }
 	}
+
+	console.log(pos, neg, "whee")
     }
 
     handleTextChange(e) {

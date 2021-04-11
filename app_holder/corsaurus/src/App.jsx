@@ -17,9 +17,9 @@ class App extends Component {
     componentDidMount() {}
     
     setData(data) {
-	console.log("setting", data)
+	//console.log("setting", data)
 	this.setState({data: data})
-	console.log(this.state.data)
+	//console.log(this.state.data)
     }
 
     render() {
