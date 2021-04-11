@@ -76,7 +76,7 @@ class Search extends Component
                     this.props.set(data.success)
                 }
 			})
-			.catch((err) => console.error(err));
+			.catch(console.error);
     }
 
     componentDidMount() {
