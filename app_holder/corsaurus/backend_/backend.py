@@ -20,9 +20,11 @@ $ export FLASK_ENV=production
 import json
 import traceback
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 from gensim.models import word2vec
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
+cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 vecto = None
@@ -31,6 +33,7 @@ vecto = None
 def root():
   return app.send_static_file('index.html')
 
+@cross_origin()
 @app.route('/query', methods=['PUT'])
 def query():
   global vecto
