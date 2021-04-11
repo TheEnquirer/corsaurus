@@ -33,8 +33,12 @@ class Search extends Component {
 	    }
 	    if (i == v.length - 1) { this.pusher(i+1) }
 	}
-
 	console.log(pos, neg, "whee")
+	return [pos, neg]
+    }
+
+    checkText(v) {
+
     }
 
     handleTextChange(e) {
@@ -42,7 +46,15 @@ class Search extends Component {
 
     handleSubmit(e) {
 	if (e.key == "Enter") {
-	    this.parseString(e.target.value)
+	    let parsed = this.parseString(e.target.value)
+	    this.makeRequest( 
+		{
+		    'num': 10,
+		    'pos': parsed[0],
+		    'neg': parsed[1],
+		    'mode': 'sum'
+		}
+	    )
 	}
     }
 
