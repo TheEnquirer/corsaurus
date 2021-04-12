@@ -86,6 +86,8 @@ def query():
       res = vecto.doesnt_match(content['words'])
     elif mode == 'similar_vector':                                                      # find words similar to given vector
       res = vecto.similar_by_vector(content['vector'])
+    elif mode == 'get_vector':                                                          # get vector of a word
+      res = vecto[content['word']]
 
     if res is None:
       return jsonify({ 'error': 'invalid_mode' })
