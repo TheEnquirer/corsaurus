@@ -59,7 +59,7 @@ class Bars extends Component
     loadingIndicator() 
     {
         return this.state.loading && (
-            <div class="loader"></div>
+            <div className="loader"></div>
         );
     }
 
