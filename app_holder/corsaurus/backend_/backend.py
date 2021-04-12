@@ -33,6 +33,10 @@ vecto = None # the word vector model
 def root():
   return app.send_static_file('index.html')
 
+@app.route('/help', methods=['GET'])
+def help():
+  return "No help page yet."
+
 @cross_origin()
 @app.route('/query', methods=['PUT'])
 def query():
