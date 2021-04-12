@@ -17,17 +17,17 @@ Oh, and if you want to go back to prod mode:
 $ export FLASK_ENV=production
 '''
 
-import json
-import traceback
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from gensim.models import word2vec
+import traceback
+import json
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-vecto = None
+vecto = None # the word vector model
 
 @app.route('/', methods=['GET'])
 def root():
@@ -79,7 +79,7 @@ def query():
     return jsonify({ 'error': 'out_of_vocab' })
   except:
     app.logger.error(traceback.format_exc())
-    return jsonify({ 'error': '{traceback.format_exc()}' })
+    return jsonify({ 'error': traceback.format_exc() })
 
 def load_model():
   global vecto

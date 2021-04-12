@@ -22,13 +22,16 @@ class Search extends Component
 
 	this.pusher = (i) => {
 	    let mod = v.slice(lp, i).replace(/((?<!\\)[+-\\])+/, "").trim();
+		// eslint-disable-next-line
 	    if (p == '+') { pos.push(mod) } else { neg.push(mod) }
 	}
 
 	for (let i in v) 
 	{
+		// eslint-disable-next-line
 	    if ((v[i-1] != "\\") && ((v[i] == '-') || (v[i] == '+'))) 
 	    {
+		// eslint-disable-next-line
 		if (i != lp) 
 		{
 		    this.pusher(i);
@@ -36,6 +39,7 @@ class Search extends Component
 		}
 		p = v[i];
 	    }
+		// eslint-disable-next-line
 	    if (i == v.length - 1) { this.pusher(i+1) }
 	}
 	return [pos, neg]

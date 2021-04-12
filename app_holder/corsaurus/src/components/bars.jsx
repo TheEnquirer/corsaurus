@@ -47,7 +47,7 @@ class Bars extends Component
 
     moreIndicator() 
     {
-        if (this.state.data.length == 0) { return ""; }
+        if (this.state.data.length === 0) { return ""; }
         else
         {
             if (this.state.loading) { this.setState({ loading: false }); }
