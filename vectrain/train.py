@@ -3,6 +3,7 @@
 
 from gensim.models import word2vec, Word2Vec
 import os
+import pickle
 
 import logging
 
@@ -30,18 +31,32 @@ def serialize_config(cfg):
 #     model.save(f'out/vocab_{serialize_config(TRAIN_PARAMS)}.model')
 #     exit()
 
+NUM_SPLIT = 4
+DELTA_EPOCH = 20
+# if __name__ == '__main__':
+#     for i in range(NUM_SPLIT):
+#         with open(f'temp_sentences_{i}', 'wb+') as wf:
+#             print(SPLIT_CORPUS_DIR + f'/{i}')
+#             sentences = word2vec.PathLineSentences(SPLIT_CORPUS_DIR + f'/{i}')
+#             sentences_in_memory = list(sentences)
+#             pickle.dump(sentences_in_memory, wf)
+#             del sentences_in_memory
+
 # train the model
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     model = Word2Vec.load(f'out/vocab_{serialize_config(TRAIN_PARAMS)}.model')
-    # sentences = word2vec.PathLineSentences(CORPUS_DIR)
-
-    sentences_in_memory = list(sentences)
-    exit()
+    sentences = word2vec.PathLineSentences(CORPUS_DIR)
 
     epochs = 0
     while True:
-        model.train(sentences, total_examples=model.corpus_count, epochs=1)
-        model.save(f'out/trained_{epochs}_{serialize_config(TRAIN_PARAMS)}.model')
-        epochs += 1
+        for i in range(NUM_SPLIT):
+            # sentences = word2vec.PathLineSentences(SPLIT_CORPUS_DIR + f'/{i}')
+            # sentences_in_memory = list(sentences)
+            with open(f'temp_sentences_{i}', 'rb') as rf:
+                sentences_in_memory = pickle.load(rf)
+                model.train(sentences_in_memory, total_examples=model.corpus_count/NUM_SPLIT, epochs=DELTA_EPOCH)
+                model.save(f'out/trained_{epochs}_{serialize_config(TRAIN_PARAMS)}.model')
+                del sentences_in_memory
+                epochs += DELTA_EPOCH
 
