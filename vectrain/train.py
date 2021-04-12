@@ -34,17 +34,17 @@ PICKLED_CORPUS_PATH = 'data/pickles_{}.pickle'
 #             pickle.dump(sentences_in_memory, wf, protocol=-1) # TODO: re-run with higher pickle number, cur is 4 (default for 3.9)
 #             del sentences_in_memory
 
-# build vocab
-if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    model = word2vec.Word2Vec(**TRAIN_PARAMS, workers=10)
-    model.build_vocab([['hello', 'world']]*TRAIN_PARAMS['min_count'])
-    for i in range(NUM_SPLIT):
-        with open(PICKLED_CORPUS_PATH.format(i), 'rb') as rf:
-            sentences_in_memory = pickle.load(rf)
-            model.build_vocab(sentences_in_memory, update=True, progress_per=int(1e5))
-            model.save(f'{OUT_DIR}/vocab_{cfg_str}.model')
-            del sentences_in_memory
+# # build vocab
+# if __name__ == '__main__':
+#     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+#     model = word2vec.Word2Vec(**TRAIN_PARAMS, workers=10)
+#     model.build_vocab([['hello', 'world']]*TRAIN_PARAMS['min_count'])
+#     for i in range(NUM_SPLIT):
+#         with open(PICKLED_CORPUS_PATH.format(i), 'rb') as rf:
+#             sentences_in_memory = pickle.load(rf)
+#             model.build_vocab(sentences_in_memory, update=True, progress_per=int(1e5))
+#             model.save(f'{OUT_DIR}/vocab_{cfg_str}.model')
+#             del sentences_in_memory
 
 DELTA_EPOCH = 20
 MODEL_OUT_PATH = '{OUT_DIR}/trained_{epochs}_{cfg_str}.model' # NOTE: don't let the user touch this string, else RCE

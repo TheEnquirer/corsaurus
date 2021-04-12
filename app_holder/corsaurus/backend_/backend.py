@@ -28,6 +28,14 @@ from gensim.models import word2vec
 import traceback
 import json
 
+GENERATED_MODELS_DIR = '/home/exr0n/vol/storage/model_snapshots/word2vec'
+
+WORDVEC_MODELS = {
+        'default': './data/1billion_word_vectors/1billion_word_vectors',
+        'window8': f'{GENERATED_MODELS_DIR}/trained_40_vector_size300,window8,min_count5.model',
+        'window2': f'{GENERATED_MODELS_DIR}/trained_340_vector_size300,window2,min_count5.model',
+    }
+
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -93,10 +101,12 @@ def query():
 def load_model():
   global vecto
   if vecto is None:
-    wv_model = word2vec.Word2Vec.load('./data/1billion_word_vectors/1billion_word_vectors')
+    app.logger.info('loading wordvectors...')
+    wv_model = word2vec.Word2Vec.load(WORDVEC_MODELS['window2'])
     vecto = wv_model.wv
     # TODO: model.wv.save(path), KeyedVectors.load(path, mmap='r')
     del wv_model
+    app.logger.info('loaded wordvectors...')
 
 app.logger.info('STARTING.')
 load_model()
