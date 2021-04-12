@@ -31,17 +31,19 @@ def serialize_config(cfg):
 #     model.save(f'out/vocab_{serialize_config(TRAIN_PARAMS)}.model')
 #     exit()
 
+# compress the corpus
 NUM_SPLIT = 4
-DELTA_EPOCH = 20
+PICKLED_CORPUS_PATH = 'data/pickles_{}.pickle'
 # if __name__ == '__main__':
 #     for i in range(NUM_SPLIT):
-#         with open(f'temp_sentences_{i}', 'wb+') as wf:
+#         with open(PICKLED_CORPUS_PATH.format(i), 'wb+') as wf:
 #             print(SPLIT_CORPUS_DIR + f'/{i}')
 #             sentences = word2vec.PathLineSentences(SPLIT_CORPUS_DIR + f'/{i}')
 #             sentences_in_memory = list(sentences)
-#             pickle.dump(sentences_in_memory, wf)
+#             pickle.dump(sentences_in_memory, wf) # TODO: re-run with higher pickle number, cur is 4 (default for 3.9)
 #             del sentences_in_memory
 
+DELTA_EPOCH = 20
 # train the model
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
@@ -51,12 +53,10 @@ if __name__ == '__main__':
     epochs = 0
     while True:
         for i in range(NUM_SPLIT):
-            # sentences = word2vec.PathLineSentences(SPLIT_CORPUS_DIR + f'/{i}')
-            # sentences_in_memory = list(sentences)
-            with open(f'temp_sentences_{i}', 'rb') as rf:
+            with open(PICKLED_CORPUS_PATH.format(i), 'rb') as rf:
                 sentences_in_memory = pickle.load(rf)
                 model.train(sentences_in_memory, total_examples=model.corpus_count/NUM_SPLIT, epochs=DELTA_EPOCH)
+                epochs += DELTA_EPOCH
                 model.save(f'out/trained_{epochs}_{serialize_config(TRAIN_PARAMS)}.model')
                 del sentences_in_memory
-                epochs += DELTA_EPOCH
 
