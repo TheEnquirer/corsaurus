@@ -7,6 +7,7 @@ import os
 import logging
 
 CORPUS_DIR = 'data/1-billion-word-language-modeling-benchmark-r13output/training-monolingual.tokenized.shuffled'
+SPLIT_CORPUS_DIR = 'data/1-billion-word-language-modeling-benchmark-r13output/training_monolingual_split'
 
 TRAIN_PARAMS = {
     'vector_size': 300,
@@ -33,8 +34,14 @@ def serialize_config(cfg):
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     model = Word2Vec.load(f'out/vocab_{serialize_config(TRAIN_PARAMS)}.model')
-    sentences = word2vec.PathLineSentences(CORPUS_DIR)
+    # sentences = word2vec.PathLineSentences(CORPUS_DIR)
+
+    sentences_in_memory = list(sentences)
+    exit()
+
+    epochs = 0
     while True:
         model.train(sentences, total_examples=model.corpus_count, epochs=1)
-        model.save(f'out/trained_{serialize_config(TRAIN_PARAMS)}.model')
+        model.save(f'out/trained_{epochs}_{serialize_config(TRAIN_PARAMS)}.model')
+        epochs += 1
 
