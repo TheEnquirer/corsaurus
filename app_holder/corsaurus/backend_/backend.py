@@ -15,6 +15,11 @@ $ flask run --host=0.0.0.0
 
 Oh, and if you want to go back to prod mode:
 $ export FLASK_ENV=production
+
+In total:
+export FLASK_APP=backend.py
+export FLASK_ENV=development
+flask run
 '''
 
 from flask import Flask, request, jsonify
@@ -90,6 +95,7 @@ def load_model():
   if vecto is None:
     wv_model = word2vec.Word2Vec.load('./data/1billion_word_vectors/1billion_word_vectors')
     vecto = wv_model.wv
+    # TODO: model.wv.save(path), KeyedVectors.load(path, mmap='r')
     del wv_model
 
 app.logger.info('STARTING.')
