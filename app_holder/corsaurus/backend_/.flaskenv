@@ -1,2 +1,2 @@
-FLASK_APP=backendtest.py
-FLASK_ENV=development
+FLASK_APP=backend.py
+FLASK_ENV=production

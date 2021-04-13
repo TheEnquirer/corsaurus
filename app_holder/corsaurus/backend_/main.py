@@ -36,24 +36,24 @@ WORDVEC_MODELS = {
         'window2': f'{GENERATED_MODELS_DIR}/trained_340_vector_size300,window2,min_count5.model',
     }
 
-app = Flask(__name__, static_folder='../build', static_url_path='/')
-app.config['CORS_HEADERS'] = 'Content-Type'
+APP = Flask(__name__, static_folder='../build', static_url_path='/')
+APP.config['CORS_HEADERS'] = 'Content-Type'
 
 vecto = None # the word vector model
 
-@app.route('/', methods=['GET'])
+@APP.route('/', methods=['GET'])
 def root():
-  return app.send_static_file('index.html')
+  return APP.send_static_file('index.html')
 
-@app.route('/help', methods=['GET'])
+@APP.route('/help', methods=['GET'])
 def help():
   return "No help page yet."
 
 # @cross_origin()
-@app.route('/query', methods=['PUT'])
+@APP.route('/query', methods=['PUT'])
 def query():
   global vecto
-  #app.logger.info('RECEIVED A QUERY.')
+  #APP.logger.info('RECEIVED A QUERY.')
   try:
     #content = request.get_json()
     content = json.loads(request.data)
@@ -62,7 +62,7 @@ def query():
     content = content.decode("utf-8")
     content = jsonify(content)
     '''
-    #app.logger.info(content)
+    #APP.logger.info(content)
     load_model()
     mode = content['mode'] # query mode
 
@@ -96,22 +96,22 @@ def query():
   except KeyError:
     return jsonify({ 'error': 'out_of_vocab' })
   except:
-    app.logger.error(traceback.format_exc())
+    APP.logger.error(traceback.format_exc())
     return jsonify({ 'error': traceback.format_exc() })
 
 def load_model():
   global vecto
   if vecto is None:
-    app.logger.info('loading wordvectors...')
+    APP.logger.info('loading wordvectors...')
     wv_model = word2vec.Word2Vec.load(WORDVEC_MODELS['window2'])
     vecto = wv_model.wv
     # TODO: model.wv.save(path), KeyedVectors.load(path, mmap='r')
     del wv_model
-    app.logger.info('loaded wordvectors...')
+    APP.logger.info('loaded wordvectors...')
 
-app.logger.info('STARTING.')
+APP.logger.info('STARTING.')
 load_model()
-app.logger.info('STARTED.')
+APP.logger.info('STARTED.')
 
 '''
 EXAMPLE CODE FOR QUERYING:
