@@ -1,4 +1,4 @@
-# [corsaur.us](corsaur.us)
+# [corsaur.us](https://corsaur.us/)
 ### /kôrˈsôrəs/
 An interactive "thesaurus" powered by word vectors.
 
