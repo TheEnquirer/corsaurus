@@ -1,0 +1,15 @@
+click==7.1.2
+Flask==1.1.2
+gensim==4.0.1
+itsdangerous==1.1.0
+Jinja2==2.11.3
+MarkupSafe==1.1.1
+numpy==1.20.2
+python-dotenv==0.17.0
+python-Levenshtein==0.12.2
+rope==0.18.0
+scipy==1.6.2
+smart-open==5.0.0
+uWSGI==2.0.19.1
+waitress==2.0.0
+Werkzeug==1.0.1
