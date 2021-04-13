@@ -22,7 +22,7 @@ export FLASK_ENV=development
 flask run
 '''
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect
 # from flask_cors import cross_origin
 from gensim.models import word2vec
 import traceback
@@ -40,6 +40,18 @@ app = Flask(__name__, static_folder='../build', static_url_path='/')
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 vecto = None # the word vector model
+
+
+@app.before_request
+def redirect_https():
+  if app.env == "development":
+    return
+  if request.is_secure:
+    return
+
+  url = request.url.replace("http://", "https://", 1)
+  code = 301
+  return redirect(url, code=code)
 
 @app.route('/', methods=['GET'])
 def root():
