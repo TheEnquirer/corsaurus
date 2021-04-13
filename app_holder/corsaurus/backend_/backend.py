@@ -22,8 +22,8 @@ export FLASK_ENV=development
 flask run
 '''
 
-from flask import Flask, request, jsonify
-from flask_cors import CORS, cross_origin
+from flask import Flask, request, jsonify, redirect
+# from flask_cors import cross_origin
 from gensim.models import word2vec
 import traceback
 import json
@@ -37,10 +37,21 @@ WORDVEC_MODELS = {
     }
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
-cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 vecto = None # the word vector model
+
+
+@app.before_request
+def redirect_https():
+  if app.env == "development":
+    return
+  if request.is_secure:
+    return
+
+  url = request.url.replace("http://", "https://", 1)
+  code = 301
+  return redirect(url, code=code)
 
 @app.route('/', methods=['GET'])
 def root():
@@ -50,7 +61,7 @@ def root():
 def help():
   return "No help page yet, contact us at support@corsaur.us :D"
 
-@cross_origin()
+# @cross_origin()
 @app.route('/query', methods=['PUT'])
 def query():
   global vecto
