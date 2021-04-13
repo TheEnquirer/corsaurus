@@ -25,9 +25,9 @@ class App extends Component
 
     render() 
 	{
+        //<a className="help-button" href="help">Help</a>
 		return (
 			<div className="main">
-				<a className="help-button" href="help">Help</a>
 				<div className="sticky-top">
                     <h1>Corsaurus</h1>
 				    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
@@ -41,16 +41,15 @@ class App extends Component
 				</div>
 			</div>
 		)
-		/*
-		<footer className="footer">
-			<div className="footer-text">
-				<p>
-					&copy; Developed with ❤️ by <a href="https://github.com/FlyN-Nick">FlyN-Nick</a>, <a href="https://github.com/TheEnquirer">TheEnquirer</a>, and <a href="https://github.com/Exr0n">Exr0n</a>.
-					Check out the source code <a href="https://github.com/TheEnquirer/corsaurus">here</a>.
-				</p>
-			</div>
-		</footer>
-		*/
+                //<footer className="footer">
+                //    <div className="footer-text">
+                //        <p>
+                //            <a href="/help">help</a>&nbsp;|&nbsp;
+                //            <a href="https://github.com/TheEnquirer/corsaurus">source</a> 
+                //            &nbsp;| ❤️ <a href="https://github.com/FlyN-Nick">FlyN-Nick</a> <a href="https://github.com/TheEnquirer">TheEnquirer</a> <a href="https://github.com/Exr0n">Exr0n</a>
+                //        </p>
+                //    </div>
+                //</footer>
     }
 }
 
