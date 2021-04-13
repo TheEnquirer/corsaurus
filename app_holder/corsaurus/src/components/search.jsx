@@ -67,7 +67,7 @@ class Search extends Component
 
     makeRequest(request) 
     {
-	fetch('http://localhost:5000/query', 
+	fetch('/query', 
 	    {
 		method: 'put',
 		body: JSON.stringify(request),
