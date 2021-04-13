@@ -48,7 +48,7 @@ def root():
 
 @app.route('/help', methods=['GET'])
 def help():
-  return "No help page yet."
+  return "No help page yet, contact us at support@corsaur.us :D"
 
 @cross_origin()
 @app.route('/query', methods=['PUT'])
