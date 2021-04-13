@@ -1,6 +1,9 @@
 import './search.css';
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+
 //const autoBind = require('auto-bind/react');
 
 class Search extends Component 
@@ -99,6 +102,7 @@ class Search extends Component
     render() {
 	return (
 	    <div className="search-wrapper">
+		<FontAwesomeIcon icon={faSearch} className="icon"/>
 		<input className="search-input" 
 		    onChange={this.handleTextChange}
 		    onKeyDown={this.handleSubmit}

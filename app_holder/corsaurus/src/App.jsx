@@ -30,9 +30,11 @@ class App extends Component
 				<a className="help-button" href="help">Help</a>
 				<div className="sticky-top">
 					<h1>Corsaurus</h1>
+				    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
 					<Search
 						set={this.setData}
 					/>
+				    </div>
 				</div>
 				<div className="over-bars">
 					<Bars data={this.state.data}/>
