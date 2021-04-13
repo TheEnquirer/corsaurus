@@ -20,15 +20,15 @@ TRAIN_PARAMS = {
         }
 
 all_params = [
-        { 'vector_size':  64, 'window':  2, 'min_count': 5, },
-        { 'vector_size':  64, 'window':  5, 'min_count': 5, },
-        { 'vector_size':  64, 'window':  8, 'min_count': 5, },
-        { 'vector_size':  64, 'window': 12, 'min_count': 5, },
+        # { 'vector_size':  64, 'window':  2, 'min_count': 5, },
+        # { 'vector_size':  64, 'window':  5, 'min_count': 5, },
+        # { 'vector_size':  64, 'window':  8, 'min_count': 5, },
+        # { 'vector_size':  64, 'window': 12, 'min_count': 5, }, # NOTE: this one only trained for 17 epochs
 
-        { 'vector_size': 300, 'window':  2, 'min_count': 5, },
-        { 'vector_size': 300, 'window':  5, 'min_count': 5, },
-        { 'vector_size': 300, 'window':  8, 'min_count': 5, },
-        { 'vector_size': 300, 'window': 12, 'min_count': 5, },
+        # { 'vector_size': 300, 'window':  2, 'min_count': 5, },
+        # { 'vector_size': 300, 'window':  5, 'min_count': 5, },
+        # { 'vector_size': 300, 'window':  8, 'min_count': 5, },
+        # { 'vector_size': 300, 'window': 12, 'min_count': 5, },
 
         { 'vector_size': 500, 'window':  2, 'min_count': 5, },
         { 'vector_size': 500, 'window':  5, 'min_count': 5, },
