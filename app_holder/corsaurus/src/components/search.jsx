@@ -2,7 +2,7 @@ import './search.css';
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 //const autoBind = require('auto-bind/react');
 
@@ -131,7 +131,12 @@ class Search extends Component
 		    onKeyDown={this.handleSubmit}
 		    placeholder={"king + woman - man"}
 		/>
-		<p className="errormsg"> {this.state.errormsg} </p>
+		{(this.state.errormsg != "")?
+		    <div className="errormsg"> 
+		     <FontAwesomeIcon icon={faExclamationTriangle} className="error-icon"/>
+		    {this.state.errormsg} 
+		    </div>
+		    : ""}
 	    </div>
 	)
     }

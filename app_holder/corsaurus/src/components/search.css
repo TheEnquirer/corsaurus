@@ -81,12 +81,21 @@
 
 .errormsg {
     /*color: #B75656;*/
-    color: #8C8C8C;
+    color: #CE7C6D;
+    font-weight: 500;
     position: absolute;
     float: left;
     margin-top: 75px;
+    /*text-decoration: underline;*/
+    /*text-decoration-color: #8C8C8C;*/
     /*left: 30px;*/
     /*border: 1px solid red;*/
+
+}
+
+.error-icon {
+    color: #DE5D47;
+    margin-right: 10px;
 
 }
 
