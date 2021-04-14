@@ -18,6 +18,7 @@
 }
 
 h1 {
+    z-index: 1;
     font-size: 69px;
     /*background: linear-gradient(to right bottom, #72CEAF, #A5FAFF);*/
     background: radial-gradient(10.52% 72.19% at 47.59% 49.21%, #79DAB9 0%, #A5FAFF 100%);
@@ -98,4 +99,25 @@ h1 {
     border-color: #72CEAF !important;
     transition: all 0.4s ease 0s;
 }
-            
+
+.slideout {
+    font-size: 12px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    margin-top: -25px;
+    color: #878787;
+    transition: 0.7s;
+    /*margin-left: -220px;*/
+    /*transform: translateY(0);*/
+    transform: translate(0px, -40px);
+    z-index: 10;
+    opacity: 0;
+    /*width: 200px;*/
+}
+
+.slideout:hover {
+    transform: translate(0, 0px);
+    opacity: 1;
+}
+

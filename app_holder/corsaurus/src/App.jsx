@@ -30,6 +30,8 @@ class App extends Component
 			<div className="main">
 				<div className="sticky-top">
                     <h1>Corsaurus</h1>
+				    <p className="slideout"> /kôrˈsôrəs/<br /> Made with ❤️ by Enquirer, FlyN-Nick, and Exr0n </p>
+
 				    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
 					<Search
 						set={this.setData}
