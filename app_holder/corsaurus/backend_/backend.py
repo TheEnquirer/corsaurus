@@ -162,7 +162,7 @@ def manual_vector_sum(pos, neg=[]):
 
   return sum
 
-def relationship_determiner(pos, neg, n1=10, n2=10):
+def relationship_determiner(pos, neg, n1=10, n2=1):
   """
   Get words that represent the relationships between words similar to a sum and the sum.
 
@@ -170,7 +170,7 @@ def relationship_determiner(pos, neg, n1=10, n2=10):
     pos (array) -- words added in the sum
     neg (array) -- words subtracted in the sum
     n1 (int) -- num of words similar to sum (default 10)
-    n2 (int) -- num of words for each relationship (default 10)
+    n2 (int) -- num of words for each relationship (default 1)
   Returns:
     relationships (array) -- 2D array of words that represent the relationships
   """
