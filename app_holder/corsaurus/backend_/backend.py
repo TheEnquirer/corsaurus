@@ -88,7 +88,11 @@ def query():
         topn    =content['num']
       )
     elif mode == 'similar':                                                             # find words similar to given word
-      res = vecto.most_similar(content['word'])
+      res = vecto.most_similar(
+        positive=[content['word']],
+        negative=[],
+        topn    =content['num']
+      )
     elif mode == 'distance':                                                            # find distance between two words
       res = vecto.distance(content['words'][0], content['words'][1])
     elif mode == 'distances':                                                           # find distance between one word and group of words
@@ -96,9 +100,11 @@ def query():
     elif mode == 'outlier':                                                             # find outlier in group of words
       res = vecto.doesnt_match(content['words'])
     elif mode == 'similar_vector':                                                      # find words similar to given vector
-      res = vecto.similar_by_vector(content['vector'])
+      res = vecto.similar_by_vector(content['vector'], content['num'])
     elif mode == 'get_vector':                                                          # get vector of a word
       res = vecto[content['word']]
+    elif mode == 'relationships':                                                        # get words that represent the relationships between words similar to a sum and the sum
+      res = relationship_determiner(content['pos'], content['neg'], content['num'], content['relationship_num'])
 
     if res is None:
       return jsonify({ 'error': 'invalid_mode' })
@@ -112,6 +118,10 @@ def query():
     return jsonify({ 'error': traceback.format_exc() })
 
 def load_model():
+  """
+  Loads word vector model into memory if not already loaded. 
+  Must be called when initializing backend and should be called whenever using vecto.
+  """
   global vecto
   if vecto is None:
     app.logger.info('loading wordvectors...')
@@ -120,6 +130,91 @@ def load_model():
     # TODO: model.wv.save(path), KeyedVectors.load(path, mmap='r')
     del wv_model
     app.logger.info('loaded wordvectors...')
+
+def manual_vector_sum(pos, neg=[]):
+  """
+  Sums vectors.
+
+  Parameters:
+    pos (array) -- *vectors* added in the sum
+    neg (array) -- *vectors* subtracted in the sum
+  Returns:
+    sum (array) -- vector of the sum
+  """
+  vector_size = 100
+  if (len(pos) > 0):
+    vector_size = len(pos[0])
+  else:
+    vector_size = len(neg[0])
+  sum = [0] * vector_size
+
+  for i in pos:
+    index = 0
+    for j in i:
+      sum[index] = sum[index] + j
+      index += 1
+  
+  for x in neg:
+    index = 0
+    for y in x:
+      sum[index] = sum[index] - y
+      index += 1
+
+  return sum
+
+def relationship_determiner(pos, neg, n1=10, n2=10):
+  """
+  Get words that represent the relationships between words similar to a sum and the sum.
+
+  Parameters:
+    pos (array) -- words added in the sum
+    neg (array) -- words subtracted in the sum
+    n1 (int) -- num of words similar to sum (default 10)
+    n2 (int) -- num of words for each relationship (default 10)
+  Returns:
+    relationships (array) -- 2D array of words that represent the relationships
+  """
+  load_model()
+  # get similar words to sum
+  similar_words = vecto.most_similar(
+    positive=pos,
+    negative=neg,
+    topn    =n1
+  )
+
+  # convert words similar to sum to their vector representations
+  index = 0
+  for x in similar_words:
+    similar_words[index] = vecto[x]
+    index += 1
+
+  # convert summed words to their vector representations
+  index = 0
+  for y in pos:
+    pos[index] = vecto[y]
+    index += 1
+  index = 0
+  for z in neg:
+    neg[index] = vecto[z]
+    index += 1
+
+  sum = manual_vector_sum(pos, neg)
+
+  relationship_vectors = [None] * len(similar_words)
+
+  index = 0
+  for i in similar_words:
+    relationship_vectors[index] = manual_vector_sum([sum], [i])
+    index += 1
+
+  relationships = [None] * len(relationship_vectors)
+
+  index = 0
+  for j in relationship_vectors:
+    relationships[index] = vecto.similar_by_vector(j, n2)
+    index += 1
+  
+  return relationships
 
 app.logger.info('STARTING.')
 load_model()
