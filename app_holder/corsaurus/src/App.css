@@ -19,7 +19,9 @@
 
 h1 {
     font-size: 69px;
-    background: linear-gradient(to right bottom, #72CEAF, #A5FAFF);
+    /*background: linear-gradient(to right bottom, #72CEAF, #A5FAFF);*/
+    background: radial-gradient(10.52% 72.19% at 47.59% 49.21%, #79DAB9 0%, #A5FAFF 100%);
+    /*rgba(165, 250, 255, 1)*/
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

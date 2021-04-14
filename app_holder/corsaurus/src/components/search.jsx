@@ -68,11 +68,8 @@ class Search extends Component
 	this.setState({inputval: e.target.value})
     }
 
-    handleSubmit(e) 
-    {
-	console.log(e.type)
+    handleSubmit(e) {
 	if (((e.key === "Enter") || (e.type == "click")) && this.state.inputval != this.state.prevSearch) {
-	    console.log("SUBMITING")
 	    this.setState({prevSearch: this.state.inputval})
 	    let parsed = this.parseString(this.state.inputval);
 	    if (parsed[0] == 1) {
@@ -102,7 +99,7 @@ class Search extends Component
 		{
 		    if (data.hasOwnProperty('error')) {
 			if (data.error == "out_of_vocab") {
-			    this.setState({errormsg: "We don't recognize one of those words..."})
+			    this.setState({errormsg: "We don't recognize a word.."})
 			}
 			throw data.error;
 		    } else {
