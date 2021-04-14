@@ -1,6 +1,7 @@
 .search-wrapper {
     margin-top: 50px;
     display: flex;
+    /*flex-direction: column;*/
     align-items: center;
     justify-content: center;
     transition: 0.3s;
@@ -68,6 +69,20 @@
     /*border: 1px solid red;*/
     transform: translate(37px, -10px);
     /*transform: scale(1.01);*/
+    transition: 0.3s;
+
+}
+
+.icon:hover {
+    color: #A6A6A6;
+}
+
+
+.errormsg {
+    position: absolute;
+    float: left;
+    margin-top: 75px;
+    margin-left: 0px;
 
 }
 

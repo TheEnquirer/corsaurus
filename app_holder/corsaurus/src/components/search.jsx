@@ -17,6 +17,8 @@ class Search extends Component
 	    mounted: false, 
 	    data: [],
 	    errormsg: "",
+	    inputval: "",
+	    prevSearch: "",
 	};
     }
 
@@ -62,13 +64,17 @@ class Search extends Component
     }
 
 
-    handleTextChange(e) {}
+    handleTextChange(e) {
+	this.setState({inputval: e.target.value})
+    }
 
     handleSubmit(e) 
     {
-	if (e.key === "Enter") 
-	{
-	    let parsed = this.parseString(e.target.value);
+	console.log(e.type)
+	if (((e.key === "Enter") || (e.type == "click")) && this.state.inputval != this.state.prevSearch) {
+	    console.log("SUBMITING")
+	    this.setState({prevSearch: this.state.inputval})
+	    let parsed = this.parseString(this.state.inputval);
 	    if (parsed[0] == 1) {
 		this.makeRequest( 
 		    {
@@ -122,13 +128,13 @@ class Search extends Component
     render() {
 	return (
 	    <div className="search-wrapper">
-		<FontAwesomeIcon icon={faSearch} className="icon"/>
+		<FontAwesomeIcon icon={faSearch} onClick={this.handleSubmit} className="icon"/>
 		<input className="search-input" 
 		    onChange={this.handleTextChange}
 		    onKeyDown={this.handleSubmit}
 		    placeholder={"king + woman - man"}
 		/>
-		<p> {this.state.errormsg} </p>
+		<p className="errormsg"> {this.state.errormsg} </p>
 	    </div>
 	)
     }
