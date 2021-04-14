@@ -13,7 +13,11 @@ class Search extends Component
 	super(props);
 	autoBind(this);
 
-	this.state = { mounted: false, data: [] };
+	this.state = { 
+	    mounted: false, 
+	    data: [],
+	    errormsg: "",
+	};
     }
 
     parseString(v) 
@@ -45,10 +49,18 @@ class Search extends Component
 		// eslint-disable-next-line
 	    if (i == v.length - 1) { this.pusher(i+1) }
 	}
-	return [pos, neg]
+
+	let full = [...pos, ...neg]
+	if (full.length == 0) { return [0, ""] }
+	for (let i in full) {
+	    if (full[i].includes(" ")) {
+		return [0, "Please seperate words with either + or -"]
+	    }
+	}
+
+	return [1, [pos, neg]]
     }
 
-    checkText(v) {}
 
     handleTextChange(e) {}
 
@@ -57,14 +69,18 @@ class Search extends Component
 	if (e.key === "Enter") 
 	{
 	    let parsed = this.parseString(e.target.value);
-	    //console.log(parsed, "parsed")
-	    this.makeRequest( 
-		{
-		    'num': 100,
-		    'pos': parsed[0],
-		    'neg': parsed[1],
-		    'mode': 'sum'
-		});
+	    if (parsed[0] == 1) {
+		this.makeRequest( 
+		    {
+			'num': 100,
+			'pos': parsed[1][0],
+			'neg': parsed[1][1],
+			'mode': 'sum'
+		    }
+		);
+	    } else {
+		this.setState({errormsg: parsed[1]})
+	    }
 	}
     }
 
@@ -79,8 +95,12 @@ class Search extends Component
 	    .then(res => res.json()).then((data) => 
 		{
 		    if (data.hasOwnProperty('error')) {
+			if (data.error == "out_of_vocab") {
+			    this.setState({errormsg: "We don't recognize one of those words..."})
+			}
 			throw data.error;
 		    } else {
+			this.setState({errormsg: ""})
 			this.props.set(data.success)
 		    }
 		})
@@ -108,6 +128,7 @@ class Search extends Component
 		    onKeyDown={this.handleSubmit}
 		    placeholder={"king + woman - man"}
 		/>
+		<p> {this.state.errormsg} </p>
 	    </div>
 	)
     }

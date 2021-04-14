@@ -115,7 +115,7 @@ def load_model():
   global vecto
   if vecto is None:
     app.logger.info('loading wordvectors...')
-    wv_model = word2vec.Word2Vec.load(WORDVEC_MODELS['window2'])
+    wv_model = word2vec.Word2Vec.load(WORDVEC_MODELS['default'])
     vecto = wv_model.wv
     # TODO: model.wv.save(path), KeyedVectors.load(path, mmap='r')
     del wv_model
