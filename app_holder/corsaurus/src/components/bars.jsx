@@ -14,7 +14,7 @@ class Bars extends Component
 	    this.state = {
             data: this.props.data,
             mounted: false,
-            shown: 1,
+            //shown: 1,
             loading: true
 	    };
 
@@ -51,7 +51,7 @@ class Bars extends Component
         else
         {
             if (this.state.loading) { this.setState({ loading: false }); }
-            if (this.state.shown*10 <= this.state.data.length) { return "▼"; }
+            if (this.props.shown*10 <= this.state.data.length) { return "▼"; }
             else { return "∅"; }
         }
     }
@@ -68,7 +68,7 @@ class Bars extends Component
         return (
             <div>
                 <div className="bars-wrapper">
-                    {(this.state.mounted && this.state.data)? this.state.data.slice(0, 10*this.state.shown).map((item, i) => (
+                    {(this.state.mounted && this.state.data)? this.state.data.slice(0, 10*this.props.shown).map((item, i) => (
                         <div className="bar-unit" style={{width: this.wid+620}}>
                             <div className="word-wrapper" style={{width: this.wid}}>
                                 <div className="word">{item[0]}</div>
@@ -91,18 +91,19 @@ class Bars extends Component
                         <p 
                             className="arrow"
                             onClick={() => {
-                            console.log(this.state.shown*10, this.state.data.length)
-                            if (this.state.shown*10 <= this.state.data.length) { 
-                                this.setState({shown: this.state.shown + 1}, () => {
-                                if (this.more) {
-                                    this.more.current.scrollIntoView({
-                                    behavior: "smooth", 
-                                    block: "start",
-                                    })
-                                    console.log("scrolling")
-                                }
-                                })
-                            }
+				//console.log(this.state.shown*10, this.state.data.length)
+				if (this.props.shown*10 <= this.state.data.length) { 
+				    this.props.setShown(this.props.shown + 1)
+				    setTimeout(() => {
+					if (this.more) {
+					    this.more.current.scrollIntoView({
+					    behavior: "smooth", 
+					    block: "start",
+					    })
+					    console.log("we be scrolling")
+					}
+				    }, 0)
+				}
                             }}
                         >
                             {this.moreIndicator()}

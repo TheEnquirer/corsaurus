@@ -108,20 +108,10 @@ h1 {
     margin-top: -25px;
     color: #878787;
     transition: 0.7s;
-    /*margin-left: -220px;*/
-    /*transform: translateY(0);*/
     transform: translate(0px, -20px);
     z-index: 10;
-    /*padding-top: -20px;*/
     opacity: 0;
-    /*width: 200px;*/
 }
-
-/*.slideout:hover {*/
-    /*transform: translate(0, 0px);*/
-    /*opacity: 1;*/
-/*}*/
-
 
 .slide-anim {
     transform: translate(0, 0px);

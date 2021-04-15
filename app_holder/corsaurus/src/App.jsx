@@ -14,6 +14,7 @@ class App extends Component
 	this.state = { 
 	    data: [],
 	    anim: "",
+	    shown: 1,
 	};
     }
 
@@ -24,6 +25,10 @@ class App extends Component
 	//console.log("setting", data)
 	this.setState({ data: data });
 	//console.log(this.state.data)
+    }
+
+    setShown(num) {
+	this.setState({shown: num})
     }
 
     render() 
@@ -44,7 +49,7 @@ class App extends Component
 		    </div>
 		</div>
 		<div className="over-bars">
-		    <Bars data={this.state.data}/>
+		    <Bars data={this.state.data} shown={this.state.shown} setShown={this.setShown}/>
 		</div>
 	    </div>
 	)

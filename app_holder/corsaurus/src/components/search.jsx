@@ -134,7 +134,7 @@ class Search extends Component
 		{(this.state.errormsg != "")?
 		    <div className="errormsg"> 
 		     <FontAwesomeIcon icon={faExclamationTriangle} className="error-icon"/>
-		    {this.state.errormsg} 
+		    {this.state.errormsg}
 		    </div>
 		    : ""}
 	    </div>
