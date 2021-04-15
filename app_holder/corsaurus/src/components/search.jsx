@@ -105,6 +105,7 @@ class Search extends Component
 		    } else {
 			this.setState({errormsg: ""})
 			this.props.set(data.success)
+			this.props.setShown(1)
 		    }
 		})
 		.catch(console.error);

@@ -45,6 +45,7 @@ class App extends Component
 		    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
 			<Search
 			    set={this.setData}
+			    setShown={this.setShown}
 			/>
 		    </div>
 		</div>

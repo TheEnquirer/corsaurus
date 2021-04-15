@@ -99,8 +99,8 @@ class Bars extends Component
 					    this.more.current.scrollIntoView({
 					    behavior: "smooth", 
 					    block: "start",
-					    })
-					    console.log("we be scrolling")
+					    }
+					)
 					}
 				    }, 0)
 				}
