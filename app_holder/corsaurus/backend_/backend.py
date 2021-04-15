@@ -59,19 +59,25 @@ def redirect_https():
 
 logfile = open(f'{LOG_DIR}/{datetime.now().isoformat()}.log', 'a+')
 logwriter = csv.writer(logfile)
+LOG_SUMMARIZE_ROUTES = ['/', '/query']
+log_routes_map = { v: i+1 for i,v in enumerate(LOG_SUMMARIZE_ROUTES) }
 @app.after_request
 def logger(res):
-  if request.path in ['/', '/query']:
+  if request.path in log_routes_map:
     # https://stackoverflow.com/a/279597/10372825
-    if not hasattr(logger, "counter"):
-      logger.counter = 0  # it doesn't exist yet, so initialize it
-    logger.counter += 1
+    if not hasattr(logger, "counter") or logger.counter[0] > 10:
+      if hasattr(logger, 'counter'):
+        logwriter.writerow(logger.counter)
+        logfile.flush()
+      logger.counter = [0] * (len(LOG_SUMMARIZE_ROUTES) + 1)
 
-    logwriter.writerow([datetime.now().isoformat(), res.status_code, request.remote_addr, request.method, request.host, request.path])
+    logger.counter[0] += 1
+    if request.path in log_routes_map:
+      logger.counter[log_routes_map[request.path]] += 1
 
-    if (logger.counter > 1):
-      logfile.flush()
-      logger.counter = 0
+    app.logger.info(logger.counter)
+
+    # logwriter.writerow([datetime.now().isoformat(), res.status_code, request.remote_addr, request.method, request.host, request.path])
 
   return res
 
