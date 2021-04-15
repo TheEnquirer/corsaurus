@@ -15,11 +15,19 @@ class Search extends Component
 
         this.state = { 
             mounted: false, 
+            firstTime: true,
             data: [],
             errormsg: "",
             inputval: "",
             prevSearch: "",
         };
+    }
+
+    clearOnFirstEnter(e) {
+        if (this.state.firstTime) {
+            e.target.innerHTML = "";
+            this.setState({ firstTime: false });
+        }
     }
 
     parseString(v, innerHTMLSetter=null) 
@@ -225,14 +233,13 @@ class Search extends Component
             <div className="search-wrapper">
             <FontAwesomeIcon icon={faSearch} onClick={this.handleSubmit} className="icon"/>
             <div className="search-input" 
+            onFocus={this.clearOnFirstEnter}
             onChange={this.handleTextChange /* UM HUX @TheEnquirer THIS NEVER GETS CALLED */ } 
             onInput={this.actuallyHandleTextChange}
-            onKeyDown={this.handleSubmit}
-            placeholder={"king + woman - man"}
             contentEditable={true}
             onKeyDown={this.cleanseInputNewlines}
             onPaste={this.clenseInputPaste}
-            />
+            ><span class={"syntaxhlpos"}>king</span> <span class={"syntaxhlneg"}>- man</span> + <span class={"syntaxhlpos"}>woman</span></div>
             {(this.state.errormsg != "")?
                 <div className="errormsg"> 
                 <FontAwesomeIcon icon={faExclamationTriangle} className="error-icon"/>
