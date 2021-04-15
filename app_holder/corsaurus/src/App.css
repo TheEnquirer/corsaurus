@@ -107,17 +107,13 @@ h1 {
     display: flex;
     margin-top: -25px;
     color: #878787;
-    transition: 0.7s;
-    /*margin-left: -220px;*/
-    /*transform: translateY(0);*/
-    transform: translate(0px, -40px);
+    transition: 0.5s;
+    transform: translate(0px, -20px);
     z-index: 10;
     opacity: 0;
-    /*width: 200px;*/
 }
 
-.slideout:hover {
+.slide-anim {
     transform: translate(0, 0px);
     opacity: 1;
 }
-

@@ -22,17 +22,21 @@ class Search extends Component
 	};
     }
 
-    parseString(v) 
+    parseString(v, innerHTMLSetter=null) 
     {
 	let pos = [];
 	let neg = [];
 	let lp = 0;
 	let p = "+";
+    let full = [];
+    let tok_info = [];
 
 	this.pusher = (i) => {
 	    let mod = v.slice(lp, i).replace(/((?<!\\)[+-\\])+/, "").trim();
 		// eslint-disable-next-line
 	    if (p == '+') { pos.push(mod) } else { neg.push(mod) }
+        full.push(mod);
+        tok_info.push([p == '+' ? 'pos' : 'neg', lp, i]);
 	}
 
 	for (let i in v) 
@@ -41,7 +45,7 @@ class Search extends Component
 	    if ((v[i-1] != "\\") && ((v[i] == '-') || (v[i] == '+'))) 
 	    {
 		// eslint-disable-next-line
-		if (i != lp) 
+		if (i != lp) // NOTE: exr0n doesn't understand why we need this if statement
 		{
 		    this.pusher(i);
 		    lp = i;
@@ -52,13 +56,18 @@ class Search extends Component
 	    if (i == v.length - 1) { this.pusher(i+1) }
 	}
 
-	let full = [...pos, ...neg]
+	//let full = [...pos, ...neg]
+    console.log(full)
 	if (full.length == 0) { return [0, ""] }
 	for (let i in full) {
 	    if (full[i].includes(" ")) {
-		return [0, "Please seperate words with either + or -"]
-	    }
+            return [0, "Please seperate words with either + or -"];
+	    } else {
+            const [ color, lhs, rhs ] = tok_info[i];
+            full[i] = `<span className="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`
+        }
 	}
+    if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
 
 	return [1, [pos, neg]]
     }
@@ -83,15 +92,19 @@ class Search extends Component
     }
     cleanseInputNewlines(e) {
         // https://stackoverflow.com/a/33239883/10372825
-        if (e.keyCode === 13) e.preventDefault();
+        if (e.keyCode === 13) {
+            this.handleSubmit(e);
+            e.preventDefault();
+        }
     }
     
     handleTextChange(e) {
-	this.setState({inputval: e.target.value});
+	this.setState({inputval: e.target.value.toLowerCase()})
     }
 
     actuallyHandleTextChange(e) {
-    console.log(this.parseString(e.target.innerHTML)[1]);
+	this.setState({inputval: e.target.innerHTML.replace('<br>', '').toLowerCase()})
+    this.parseString(e.target.innerHTML.replace('<br>', ''), (v) => { e.target.innerHTML = v });
     }
 
     handleSubmit(e) {
@@ -131,6 +144,7 @@ class Search extends Component
 		    } else {
 			this.setState({errormsg: ""})
 			this.props.set(data.success)
+			this.props.setShown(1)
 		    }
 		})
 		.catch(console.error);
@@ -164,7 +178,7 @@ class Search extends Component
 		{(this.state.errormsg != "")?
 		    <div className="errormsg"> 
 		     <FontAwesomeIcon icon={faExclamationTriangle} className="error-icon"/>
-		    {this.state.errormsg} 
+		    {this.state.errormsg}
 		    </div>
 		    : ""}
 	    </div>
