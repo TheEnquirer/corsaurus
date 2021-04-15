@@ -25,12 +25,15 @@ flask run
 from flask import Flask, request, jsonify, redirect
 # from flask_cors import cross_origin
 from gensim.models import word2vec
+from datetime import datetime
+import csv
 import traceback
 import json
 import signal
 import sys
 
 GENERATED_MODELS_DIR = '/home/exr0n/vol/storage/model_snapshots/word2vec'
+LOG_DIR = '/home/exr0n/vol/storage/logs/corsaurus'
 
 WORDVEC_MODELS = {
         'default': './data/1billion_word_vectors/1billion_word_vectors',
@@ -43,15 +46,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 vecto = None # the word vector model
 
-logwriter = open('data/usage.log', 'a+')
-def signal_handler(sig, frame):
-    # from https://stackoverflow.com/a/1112350/10372825
-    print('Closing log file...')
-    logwriter.close()
-    sys.exit(0)
-
-signal.signal(signal.SIGINT, signal_handler)
-
 @app.before_request
 def redirect_https():
   if app.env == "development":
@@ -62,6 +56,24 @@ def redirect_https():
   url = request.url.replace("http://", "https://", 1)
   code = 301
   return redirect(url, code=code)
+
+logfile = open(f'{LOG_DIR}/{datetime.now().isoformat()}.log', 'a+')
+logwriter = csv.writer(logfile)
+@app.after_request
+def logger(res):
+  if request.path in ['/', '/query']:
+    # https://stackoverflow.com/a/279597/10372825
+    if not hasattr(logger, "counter"):
+      logger.counter = 0  # it doesn't exist yet, so initialize it
+    logger.counter += 1
+
+    logwriter.writerow([datetime.now().isoformat(), res.status_code, request.remote_addr, request.method, request.host, request.path])
+
+    if (logger.counter > 1):
+      logfile.flush()
+      logger.counter = 0
+
+  return res
 
 @app.route('/', methods=['GET'])
 def root():
