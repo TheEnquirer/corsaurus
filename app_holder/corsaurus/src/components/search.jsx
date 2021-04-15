@@ -111,6 +111,45 @@ class Search extends Component
             caretPosition = tmp.innerHTML.length;
             return caretPosition;
         }
+        function set_range(start, end, element) {
+            // based on https://stackoverflow.com/a/24862437/10372825
+            function get_text_nodes_in(node) {
+                var text_nodes = [];
+                if (node.nodeType === 3) {
+                    text_nodes.push(node);
+                } else {
+                    var children = node.childNodes;
+                    for (var i = 0, len = children.length; i < len; ++i) {
+                        var text_node
+                        text_nodes.push.apply(text_nodes, get_text_nodes_in(children[i]));
+                    }
+                }
+                return text_nodes;
+            }
+            var range = document.createRange();
+            range.selectNodeContents(element);
+            var text_nodes = get_text_nodes_in(element);
+            var foundStart = false;
+            var char_count = 0, end_char_count;
+
+            // loop through text nodes until we find the one that contains the target
+            for (var i = 0, text_node; text_node = text_nodes[i++]; ) {
+                end_char_count = char_count + text_node.length;
+                if (!foundStart && start >= char_count && (start < end_char_count || (start === end_char_count && i < text_nodes.length))) {
+                    range.setStart(text_node, start - char_count);
+                    foundStart = true;
+                }
+                if (foundStart && end <= end_char_count) {
+                    range.setEnd(text_node, end - char_count);
+                    break;
+                }
+                char_count = end_char_count;
+            }
+
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
         setTimeout(() => {
             let pos = getCaretPosition(e.target);
             // clense content of html
@@ -124,13 +163,14 @@ class Search extends Component
             console.log(e)
             // set cursor to one after the previous position
             if (e.type === 'paste') return; // handled by the paste cleanser
-            let range = document.createRange();
             console.log(pos, e.target.innerHTML.length)
-            range.setEnd(e.target, pos-1);
-            range.collapse(false);
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
+            set_range(pos, pos, e.target);
+            //let range = document.createRange();
+            //range.setEnd(e.target, pos-1);
+            //range.collapse(false);
+            //let selection = window.getSelection();
+            //selection.removeAllRanges();
+            //selection.addRange(range);
         }, 0);
     }
 
