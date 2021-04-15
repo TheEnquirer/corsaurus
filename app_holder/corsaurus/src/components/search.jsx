@@ -64,9 +64,12 @@ class Search extends Component
     }
 
     clenseInputPaste(e) {
-        console.log('paste', e);
+        // https://stackoverflow.com/a/47140708/10372825
+        let doc = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
+        e.target.innerHTML = doc.body.textContent.replace(/\n/g, ' ') || "";
     }
     cleanseInputNewlines(e) {
+        // https://stackoverflow.com/a/33239883/10372825
         if (e.keyCode === 13) e.preventDefault();
     }
     
