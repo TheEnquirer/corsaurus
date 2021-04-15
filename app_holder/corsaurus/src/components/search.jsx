@@ -164,7 +164,9 @@ class Search extends Component
             val = (val.body.textContent || "").replace(/\n/g, ' ');
         
             this.setState({inputval: val.toLowerCase()})
-            this.handleSubmit(e);
+            //this.handleSubmit(e);
+            this.parseString(this.state.inputval, (v) => { e.target.innerHTML = v });
+
         
             set_range(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
         }, 0);
