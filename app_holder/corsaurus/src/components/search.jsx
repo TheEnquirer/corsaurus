@@ -111,8 +111,9 @@ class Search extends Component
             caretPosition = tmp.innerHTML.length;
             return caretPosition;
         }
-        function set_range(start, end, element) {
+        function set_range(pos, element) {
             // based on https://stackoverflow.com/a/24862437/10372825
+            // only works for one layer of nested nodes
             function get_text_nodes_in(node) {
                 var text_nodes = [];
                 if (node.nodeType === 3) {
@@ -120,32 +121,30 @@ class Search extends Component
                 } else {
                     var children = node.childNodes;
                     for (var i = 0, len = children.length; i < len; ++i) {
-                        var text_node
                         text_nodes.push.apply(text_nodes, get_text_nodes_in(children[i]));
                     }
                 }
+                console.log(text_nodes);
                 return text_nodes;
             }
             var range = document.createRange();
             range.selectNodeContents(element);
             var text_nodes = get_text_nodes_in(element);
-            var foundStart = false;
-            var char_count = 0, end_char_count;
+            //var foundStart = false;
+            let char_count = 0, end_char_count = 0;
 
             // loop through text nodes until we find the one that contains the target
-            for (var i = 0, text_node; text_node = text_nodes[i++]; ) {
-                end_char_count = char_count + text_node.length;
-                if (!foundStart && start >= char_count && (start < end_char_count || (start === end_char_count && i < text_nodes.length))) {
-                    range.setStart(text_node, start - char_count);
-                    foundStart = true;
-                }
-                if (foundStart && end <= end_char_count) {
-                    range.setEnd(text_node, end - char_count);
-                    break;
-                }
-                char_count = end_char_count;
+            for (let cur of text_nodes) {
+                //end_char_count = char_count + cur.parentElement.innerHTML.length;
+                console.log(pos, char_count, end_char_count);
+                ////if (pos >= char_count && (pos < end_char_count || (pos === end_char_count && i < text_nodes.length))) {
+                //console.log(cur);
+                //if (pos >= char_count && pos < end_char_count) {
+                //    range.setStart(cur, pos - char_count);
+                //    range.setEnd(cur, pos - char_count+1);
+                //}
+                char_count += cur.parentElement.innerHTML.length;
             }
-
             var selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
@@ -164,7 +163,7 @@ class Search extends Component
             // set cursor to one after the previous position
             if (e.type === 'paste') return; // handled by the paste cleanser
             console.log(pos, e.target.innerHTML.length)
-            set_range(pos, pos, e.target);
+            set_range(pos, e.target);
             //let range = document.createRange();
             //range.setEnd(e.target, pos-1);
             //range.collapse(false);
