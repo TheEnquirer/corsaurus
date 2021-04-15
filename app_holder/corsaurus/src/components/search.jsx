@@ -127,9 +127,9 @@ class Search extends Component
             const [ color, lhs, rhs ] = tok_info[i];
             if (full[i].includes(" ")) {
                 bad = true;
-                full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`
+                full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`;
             } else {
-                full[i] = `<span class="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`
+                full[i] = `<span class="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`;
             }
         }
         if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
@@ -137,17 +137,18 @@ class Search extends Component
         if (bad) return [0, "Please seperate words with either + or -"];
 
         // out of vocab hl
-        this.query({ 'mode': 'vocabcheck', 'words': mods })
-            .then((wear_a_mask) => {
-                const wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
-                const socially_distance = mods.filter((v, i) => !wear_a_mask[i]);
-                if (socially_distance.length > 0)
-                    this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${JSON.stringify(socially_distance).slice(1, -1).replace(/,/g, ", ")}` });
-                else this.setState({ errormsg: '' });
-                innerHTMLSetter(wash_ur_hands.join(""));
-            }).catch(console.error);
+        if (typeof innerHTMLSetter === 'function') 
+            this.query({ 'mode': 'vocabcheck', 'words': mods })
+                .then((wear_a_mask) => {
+                    const wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
+                    const socially_distance = mods.filter((_, i) => !wear_a_mask[i]);
+                    if (socially_distance.length > 0)
+                        this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${JSON.stringify(socially_distance).slice(1, -1).replace(/,/g, ", ")}` });
+                    else this.setState({ errormsg: '' });
+                    innerHTMLSetter(wash_ur_hands.join(""));
+                }).catch(console.error);
 
-        return [1, [pos, neg]]
+        return [1, [pos, neg]];
     }
 
     cleanseInputNewlines(e) {
@@ -168,7 +169,7 @@ class Search extends Component
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
             val = (val.body.textContent || "").replace(/\n/g, ' ');
         
-            this.setState({inputval: val.toLowerCase()})
+            this.setState({inputval: val.toLowerCase()});
             this.parseString(this.state.inputval, (v) => {
                 e.target.innerHTML = v;
                 this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
@@ -176,9 +177,9 @@ class Search extends Component
         }, 0);
     }
 
-    handleSubmit(e) {
+    handleSubmit() {
         if (this.state.inputval != this.state.prevSearch) {
-            this.setState({prevSearch: this.state.inputval})
+            this.setState({prevSearch: this.state.inputval});
             let parsed = this.parseString(this.state.inputval);
             if (parsed[0] == 1) {
                 this.makeRequest( 
@@ -190,7 +191,7 @@ class Search extends Component
                     }
                 );
             } else {
-                this.setState({errormsg: parsed[1]})
+                this.setState({errormsg: parsed[1]});
             }
         }
     }
