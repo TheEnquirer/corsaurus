@@ -103,6 +103,19 @@ class Search extends Component
     }
 
     actuallyHandleTextChange(e) {
+        function getCaretPosition (node) {
+            // from https://stackoverflow.com/a/46902361/10372825
+            var range = window.getSelection().getRangeAt(0),
+                preCaretRange = range.cloneRange(),
+                caretPosition,
+                tmp = document.createElement("div");
+
+            preCaretRange.selectNodeContents(node);
+            preCaretRange.setEnd(range.endContainer, range.endOffset);
+            tmp.appendChild(preCaretRange.cloneContents());
+            caretPosition = tmp.innerHTML.length;
+            return caretPosition;
+        }
         setTimeout(() => {
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
