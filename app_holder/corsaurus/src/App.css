@@ -110,14 +110,20 @@ h1 {
     transition: 0.7s;
     /*margin-left: -220px;*/
     /*transform: translateY(0);*/
-    transform: translate(0px, -40px);
+    transform: translate(0px, -20px);
     z-index: 10;
+    /*padding-top: -20px;*/
     opacity: 0;
     /*width: 200px;*/
 }
 
-.slideout:hover {
+/*.slideout:hover {*/
+    /*transform: translate(0, 0px);*/
+    /*opacity: 1;*/
+/*}*/
+
+
+.slide-anim {
     transform: translate(0, 0px);
     opacity: 1;
 }
-
