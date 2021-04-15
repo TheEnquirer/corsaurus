@@ -4,8 +4,6 @@ import autoBind from 'react-autobind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
-//const autoBind = require('auto-bind/react');
-
 class Search extends Component 
 {
     constructor(props) 
@@ -46,11 +44,13 @@ class Search extends Component
             if (p == '+') { pos.push(mod) } else { neg.push(mod) }
             full.push(mod);
 
-            this.query({ 'mode': 'vocabcheck', 'word': mod })
-                .then((isvalid) => {
-                    console.log(isvalid);
-                    tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
-                });
+            tok_info.push([p == '+' ? 'pos' : 'neg', lp, i]);
+            // NOTE: it'd be cool to error highlight on out of vocab, but may require asyncifying everything
+            //this.query({ 'mode': 'vocabcheck', 'word': mod })
+            //    .then((isvalid) => {
+            //        console.log(isvalid);
+            //        tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
+            //    });
         }
 
         for (let i in v) 
@@ -67,7 +67,7 @@ class Search extends Component
                 p = v[i];
             }
             // eslint-disable-next-line
-            if (i == v.length - 1) { this.pusher(i+1) } // i think this breaks spaces -exr0n
+            if (i == v.length - 1) { this.pusher(i+1) } 
         }
 
         if (full.length == 0) { return [0, ""] }
@@ -88,18 +88,18 @@ class Search extends Component
         return [1, [pos, neg]]
     }
 
-    clenseInputPaste(e) {
-        setTimeout(() => {
-            // set caret to the end of the range
-            // https://stackoverflow.com/a/52085710/10372825
-            let range = document.createRange();
-            range.selectNodeContents(e.target);
-            range.collapse(false);
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }, 0);
-    }
+    //clenseInputPaste(e) {
+    //    setTimeout(() => {
+    //        // set caret to the end of the range
+    //        // https://stackoverflow.com/a/52085710/10372825
+    //        let range = document.createRange();
+    //        range.selectNodeContents(e.target);
+    //        range.collapse(false);
+    //        let selection = window.getSelection();
+    //        selection.removeAllRanges();
+    //        selection.addRange(range);
+    //    }, 0);
+    //}
     cleanseInputNewlines(e) {
         // https://stackoverflow.com/a/33239883/10372825
         if (e.keyCode === 13) {
@@ -176,21 +176,16 @@ class Search extends Component
             val = (val.body.textContent || "").replace(/\n/g, ' ');
         
             this.setState({inputval: val.toLowerCase()})
-            this.parseString(val); // do syntax highlighting
-            this.parseString(val, (v) => {
-                console.log('setting to', v);
-                e.target.innerHTML = v
-                console.log('set to', e.target.innerHTML);
-            }); // do syntax highlighting
+            this.handleSubmit(e);
         
             set_range(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
         }, 0);
     }
 
     handleSubmit(e) {
-        if (((e.key === "Enter") || (e.type == "click")) && this.state.inputval != this.state.prevSearch) {
+        if (this.state.inputval != this.state.prevSearch) {
             this.setState({prevSearch: this.state.inputval})
-            let parsed = this.parseString(this.state.inputval);
+            let parsed = this.parseString(this.state.inputval, (v) => { e.target.innerHTML = v });
             if (parsed[0] == 1) {
                 this.makeRequest( 
                     {
