@@ -15,7 +15,9 @@ class Bars extends Component
             data: this.props.data,
             mounted: false,
             //shown: 1,
-            loading: true
+            loading: true,
+	    hovering: -1,
+	    copied: -1,
 	    };
 
 	    this.more = React.createRef();
@@ -70,8 +72,30 @@ class Bars extends Component
                 <div className="bars-wrapper">
                     {(this.state.mounted && this.state.data)? this.state.data.slice(0, 10*this.props.shown).map((item, i) => (
                         <div className="bar-unit" style={{width: this.wid+620}}>
-                            <div className="word-wrapper" style={{width: this.wid}}>
-                                <div className="word">{item[0]}</div>
+                            <div 
+				className="word-wrapper" 
+				style={{width: this.wid}}
+				onClick={() => {
+				    navigator.clipboard.writeText(item[0])
+				    this.setState({copied: i})
+				}}
+			    >
+                                <div 
+				    className="word"
+				    onMouseEnter={() => { if (this.state.hovering != i) this.setState({hovering: i}) }}
+				    onMouseLeave={() => { if (this.state.hovering == i) this.setState({hovering: -1}) }}
+				>
+				    <span 
+					className="tooltip" 
+					style={{
+					    opacity: `${(this.state.hovering == i)? "1" : "0"}`, 
+					    background: `${(this.state.copied == i)? "#148DE0" : "#454545"}`
+					}}
+				    >
+					{(this.state.copied == i)? "copied!" : "copy"}
+				    </span>
+				    {item[0]}
+				</div>
                             </div>
                             <Spring native to={{width: 500}}>
                                 {props =>
@@ -99,8 +123,7 @@ class Bars extends Component
 					    this.more.current.scrollIntoView({
 					    behavior: "smooth", 
 					    block: "start",
-					    }
-					)
+					    })
 					}
 				    }, 0)
 				}

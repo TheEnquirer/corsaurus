@@ -107,7 +107,7 @@ h1 {
     display: flex;
     margin-top: -25px;
     color: #878787;
-    transition: 0.7s;
+    transition: 0.5s;
     transform: translate(0px, -20px);
     z-index: 10;
     opacity: 0;

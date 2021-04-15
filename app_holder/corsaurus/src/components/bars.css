@@ -99,3 +99,26 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.tooltip {
+    /*display: inline;*/
+    /*position: absolute;*/
+    /*margin-left: 50px;*/
+    /*border: 1px solid red;*/
+    margin-right: 5px;
+    margin-top: -50px;
+    margin-bottom: 20px;
+    /*transform: translateY(-20px);*/
+    background: #454545;
+    color: #EBE6C5 !important;
+    border-radius: 8px;
+    padding: 5px;
+    padding-bottom: 6px;
+    font-size: 11px;
+    transition: 0.3s;
+    vertical-align: 2px;
+}
+
+
+
+
