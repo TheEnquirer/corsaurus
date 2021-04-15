@@ -38,7 +38,8 @@ class Search extends Component
         let lp = 0;
         let p = "+";
         let full = [];
-        let tok_info = [];
+        //let tok_info = [];
+        let tok_promises = [];
 
         this.pusher = (i) => {
             let mod = v.slice(lp, i).replace(/((?<!\\)[+-\\])+/, "").trim();
@@ -46,11 +47,12 @@ class Search extends Component
             if (p == '+') { pos.push(mod) } else { neg.push(mod) }
             full.push(mod);
 
-            this.query({ 'mode': 'vocabcheck', 'word': mod })
+            tok_promises.push(this.query({ 'mode': 'vocabcheck', 'word': mod })
                 .then((isvalid) => {
                     console.log(isvalid);
-                    tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
-                });
+                    //tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
+                    return [isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i];
+                }));
         }
 
         for (let i in v) 
@@ -72,6 +74,7 @@ class Search extends Component
 
         if (full.length == 0) { return [0, ""] }
         let bad = false;    
+        promises.all(tok_promises).then(tok_info => {
         for (let i in full) {
             const [ color, lhs, rhs ] = tok_info[i];
             console.log('range    ', lhs, rhs, rhs > 10)
