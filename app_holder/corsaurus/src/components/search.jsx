@@ -25,7 +25,7 @@ class Search extends Component
 
     clearOnFirstEnter(e) {
         if (this.state.firstTime) {
-            e.target.innerHTML = "";
+            e.target.innerHTML = "&nbsp;";
             this.setState({ firstTime: false });
         }
     }
@@ -152,9 +152,8 @@ class Search extends Component
             }
             if (!foundStart) {
                 const last_node = text_nodes[text_nodes.length-1];
-                //range.selectNodeContents(text_nodes[text_nodes.length-1].parentElement)
-                console.log(last_node.length);
-                range.setEnd(last_node, last_node.length-1);
+                if (typeof last_node == 'undefined') return;
+                range.setEnd(last_node, last_node.length);
                 range.collapse(false);
             }
 
@@ -163,6 +162,8 @@ class Search extends Component
             selection.addRange(range);
         }
         setTimeout(() => {
+            if (e.target.innerHTML.length == 1)
+                e.target.innerHTML = '<span class="syntaxhlpos">' + e.target.innerHTML + '</span>';
             console.log('current is ', e.target.innerHTML);
             let pos = getCaretPosition(e.target);
             // clense content of html
