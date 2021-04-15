@@ -32,6 +32,7 @@ class Search extends Component
 
     parseString(v, innerHTMLSetter=null) 
     {
+        console.log(v);
         let pos = [];
         let neg = [];
         let lp = 0;
@@ -44,6 +45,7 @@ class Search extends Component
             // eslint-disable-next-line
             if (p == '+') { pos.push(mod) } else { neg.push(mod) }
             full.push(mod);
+            //fetch('/query', ); // TODO: check vocab here
             tok_info.push([p == '+' ? 'pos' : 'neg', lp, i]);
         }
 
@@ -61,13 +63,14 @@ class Search extends Component
                 p = v[i];
             }
             // eslint-disable-next-line
-            if (i == v.length - 1) { this.pusher(i+1) }
+            if (i == v.length - 1) { this.pusher(i+1) } // i think this breaks spaces -exr0n
         }
 
         if (full.length == 0) { return [0, ""] }
         let bad = false;    
         for (let i in full) {
             const [ color, lhs, rhs ] = tok_info[i];
+            console.log('range    ', lhs, rhs, rhs > 10)
             if (full[i].includes(" ")) {
                 bad = true;
                 full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`
@@ -102,10 +105,6 @@ class Search extends Component
     }
 
     handleTextChange(e) {
-        this.setState({inputval: e.target.value.toLowerCase()})
-    }
-
-    actuallyHandleTextChange(e) {
         function getCaretPosition (node) {
             // from https://stackoverflow.com/a/46902361/10372825
             var range = window.getSelection().getRangeAt(0),
@@ -158,6 +157,7 @@ class Search extends Component
             selection.addRange(range);
         }
         setTimeout(() => {
+            //console.log(e.target.innerHTML);
             let pos = getCaretPosition(e.target);
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
@@ -234,11 +234,11 @@ class Search extends Component
             <FontAwesomeIcon icon={faSearch} onClick={this.handleSubmit} className="icon"/>
             <div className="search-input" 
             onFocus={this.clearOnFirstEnter}
-            onChange={this.handleTextChange /* UM HUX @TheEnquirer THIS NEVER GETS CALLED */ } 
-            onInput={this.actuallyHandleTextChange}
+            onInput={this.handleTextChange}
             contentEditable={true}
             onKeyDown={this.cleanseInputNewlines}
             onPaste={this.clenseInputPaste}
+            suppressContentEditableWarning={true /* iff you know what ur doing, which I don't https://stackoverflow.com/a/49639256/10372825 */}
             ><span class={"syntaxhlpos"}>king</span> <span class={"syntaxhlneg"}>- man</span> + <span class={"syntaxhlpos"}>woman</span></div>
             {(this.state.errormsg != "")?
                 <div className="errormsg"> 
