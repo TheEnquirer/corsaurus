@@ -27,10 +27,65 @@ class Search extends Component
             this.setState({ firstTime: false });
         }
     }
+    getCaretPosition (node) {
+        // from https://stackoverflow.com/a/46902361/10372825
+        var range = window.getSelection().getRangeAt(0),
+            preCaretRange = range.cloneRange(),
+            caretPosition,
+            tmp = document.createElement("div");
+
+        preCaretRange.selectNodeContents(node);
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        tmp.appendChild(preCaretRange.cloneContents());
+        caretPosition = new DOMParser().parseFromString(tmp.innerHTML, 'text/html');
+        return caretPosition.body.textContent.length;
+    }
+    setCaretPosition(pos, element) {
+        // based on https://stackoverflow.com/a/24862437/10372825
+        // only works for one layer of nested nodes
+        function get_text_nodes_in(node) {
+            var text_nodes = [];
+            if (node.nodeType === 3) {
+                text_nodes.push(node);
+            } else {
+                var children = node.childNodes;
+                for (var i = 0, len = children.length; i < len; ++i) {
+                    text_nodes.push.apply(text_nodes, get_text_nodes_in(children[i]));
+                }
+            }
+            return text_nodes;
+        }
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        var text_nodes = get_text_nodes_in(element);
+        let foundStart = false;
+        let char_count = 0, end_char_count = 0;
+
+        // loop through text nodes until we find the one that contains the target
+        for (let cur of text_nodes) {
+            end_char_count = char_count + cur.length;
+            if (pos >= char_count && pos < end_char_count) {
+                range.setStart(cur, pos - char_count);
+                range.setEnd(cur, pos - char_count);
+                foundStart = true;
+                break;
+            }
+            char_count = end_char_count;
+        }
+        if (!foundStart) {
+            const last_node = text_nodes[text_nodes.length-1];
+            if (typeof last_node == 'undefined') return;
+            range.setEnd(last_node, last_node.length);
+            range.collapse(false);
+        }
+
+        var selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
 
     parseString(v, innerHTMLSetter=null) 
     {
-        console.log(v);
         let pos = [];
         let neg = [];
         let lp = 0;
@@ -45,12 +100,6 @@ class Search extends Component
             full.push(mod);
 
             tok_info.push([p == '+' ? 'pos' : 'neg', lp, i]);
-            // NOTE: it'd be cool to error highlight on out of vocab, but may require asyncifying everything
-            //this.query({ 'mode': 'vocabcheck', 'word': mod })
-            //    .then((isvalid) => {
-            //        console.log(isvalid);
-            //        tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
-            //    });
         }
 
         for (let i in v) 
@@ -71,20 +120,32 @@ class Search extends Component
         }
 
         if (full.length == 0) { return [0, ""] }
+        let syntax_highlighted = "";
         let bad = false;    
         for (let i in full) {
             const [ color, lhs, rhs ] = tok_info[i];
-            console.log('range    ', lhs, rhs, rhs > 10)
             if (full[i].includes(" ")) {
                 bad = true;
-                full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`
+                syntax_highlighted += `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`;
             } else {
-                full[i] = `<span class="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`
+                syntax_highlighted += `<span class="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`;
             }
         }
-        if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
+        if (typeof innerHTMLSetter === 'function') innerHTMLSetter(syntax_highlighted);
 
         if (bad) return [0, "Please seperate words with either + or -"];
+
+        // out of vocab hl
+        // NOTE: it'd be cool to error highlight on out of vocab, but may require asyncifying everything
+        this.query({ 'mode': 'vocabcheck', 'words': full.map(w) })
+            .then((wear_a_mask) => {
+                console.log('in parse', wear_a_mask);
+                let wash_ur_hands = full.map((v, i) => i ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
+                console.log(wash_ur_hands)
+                innerHTMLSetter(wash_ur_hands.join(""));
+                //tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
+            }).catch(console.error);
+
         return [1, [pos, neg]]
     }
 
@@ -97,77 +158,20 @@ class Search extends Component
     }
 
     handleTextChange(e) {
-        function getCaretPosition (node) {
-            // from https://stackoverflow.com/a/46902361/10372825
-            var range = window.getSelection().getRangeAt(0),
-                preCaretRange = range.cloneRange(),
-                caretPosition,
-                tmp = document.createElement("div");
-
-            preCaretRange.selectNodeContents(node);
-            preCaretRange.setEnd(range.endContainer, range.endOffset);
-            tmp.appendChild(preCaretRange.cloneContents());
-            caretPosition = new DOMParser().parseFromString(tmp.innerHTML, 'text/html');
-            return caretPosition.body.textContent.length;
-        }
-        function set_range(pos, element) {
-            // based on https://stackoverflow.com/a/24862437/10372825
-            // only works for one layer of nested nodes
-            function get_text_nodes_in(node) {
-                var text_nodes = [];
-                if (node.nodeType === 3) {
-                    text_nodes.push(node);
-                } else {
-                    var children = node.childNodes;
-                    for (var i = 0, len = children.length; i < len; ++i) {
-                        text_nodes.push.apply(text_nodes, get_text_nodes_in(children[i]));
-                    }
-                }
-                return text_nodes;
-            }
-            var range = document.createRange();
-            range.selectNodeContents(element);
-            var text_nodes = get_text_nodes_in(element);
-            let foundStart = false;
-            let char_count = 0, end_char_count = 0;
-
-            // loop through text nodes until we find the one that contains the target
-            for (let cur of text_nodes) {
-                end_char_count = char_count + cur.length;
-                if (pos >= char_count && pos < end_char_count) {
-                    range.setStart(cur, pos - char_count);
-                    range.setEnd(cur, pos - char_count);
-                    foundStart = true;
-                    break;
-                }
-                char_count = end_char_count;
-            }
-            if (!foundStart) {
-                const last_node = text_nodes[text_nodes.length-1];
-                if (typeof last_node == 'undefined') return;
-                range.setEnd(last_node, last_node.length);
-                range.collapse(false);
-            }
-
-            var selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
         setTimeout(() => {
             if (e.target.innerHTML.length == 1)
                 e.target.innerHTML = '<span class="syntaxhlpos">' + e.target.innerHTML + '</span>';
-            console.log('current is ', e.target.innerHTML);
-            let pos = getCaretPosition(e.target);
+            let pos = this.getCaretPosition(e.target);
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
             val = (val.body.textContent || "").replace(/\n/g, ' ');
         
             this.setState({inputval: val.toLowerCase()})
-            this.parseString(this.state.inputval, (v) => { e.target.innerHTML = v });
-
-        
-            set_range(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
+            this.parseString(this.state.inputval, (v) => {
+                e.target.innerHTML = v;
+                this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
+            });
         }, 0);
     }
 
@@ -215,9 +219,10 @@ class Search extends Component
     }
 
     async query(req) {
-        fetch('/query', { method: 'put', body: JSON.stringify(req) })
+        return fetch('/query', { method: 'put', body: JSON.stringify(req) })
             .then(res => res.json())
             .then(data => {
+                console.log('got from query', data);
                 if (data.hasOwnProperty('error'))
                     throw data.error;
                 else
