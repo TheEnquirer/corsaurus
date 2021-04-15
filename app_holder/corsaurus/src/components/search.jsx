@@ -56,8 +56,6 @@ class Search extends Component
 	    if (i == v.length - 1) { this.pusher(i+1) }
 	}
 
-	//let full = [...pos, ...neg]
-    console.log(full)
 	if (full.length == 0) { return [0, ""] }
     let bad = false;    
 	for (let i in full) {
@@ -69,8 +67,6 @@ class Search extends Component
             full[i] = `<span class="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`
         }
 	}
-    console.log(full)
-    console.log('\n')
     if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
 
     if (bad) return [0, "Please seperate words with either + or -"];
@@ -117,13 +113,16 @@ class Search extends Component
             return caretPosition;
         }
         setTimeout(() => {
+            let pos = getCaretPosition(e.target());
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
+            val = (val.body.textContent || "").replace(/\n/g, ' ');
+
+
+            this.setState({inputval: val.toLowerCase()})
+            this.parseString(val, (v) => { e.target.innerHTML = v }); // do syntax highlighting
             
-            e.target.innerHTML = (val.body.textContent || "").replace(/\n/g, ' ');
-            this.setState({inputval: e.target.innerHTML.toLowerCase()})
-            this.parseString(e.target.innerHTML, (v) => { e.target.innerHTML = v });
         }, 0);
     }
 
