@@ -137,15 +137,14 @@ class Search extends Component
         if (bad) return [0, "Please seperate words with either + or -"];
 
         // out of vocab hl
-        // NOTE: it'd be cool to error highlight on out of vocab, but may require asyncifying everything
-        //this.query({ 'mode': 'vocabcheck', 'words': full.map(w => w.slice(26, -7 /* NOTE: hacky as heck, relies on className len */).trim()) })
         this.query({ 'mode': 'vocabcheck', 'words': mods })
             .then((wear_a_mask) => {
-                console.log('in parse', wear_a_mask);
-                let wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
-                console.log(wash_ur_hands)
+                const wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
+                const socially_distance = mods.filter((v, i) => !wear_a_mask[i]);
+                if (socially_distance.length > 0)
+                    this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${JSON.stringify(socially_distance).slice(1, -1).replace(/,/g, ", ")}` });
+                else this.setState({ errormsg: '' });
                 innerHTMLSetter(wash_ur_hands.join(""));
-                //tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
             }).catch(console.error);
 
         return [1, [pos, neg]]
@@ -207,9 +206,6 @@ class Search extends Component
             .then(res => res.json()).then((data) => 
                 {
                     if (data.hasOwnProperty('error')) {
-                        if (data.error == "out_of_vocab") {
-                            this.setState({errormsg: "We don't recognize a word.."})
-                        }
                         throw data.error;
                     } else {
                         this.setState({errormsg: ""})
