@@ -64,9 +64,22 @@ class Search extends Component
     }
 
     clenseInputPaste(e) {
-        // https://stackoverflow.com/a/47140708/10372825
-        let doc = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
-        e.target.innerHTML = doc.body.textContent.replace(/\n/g, ' ').replace(/\<br\>/g, ' ') || "";
+        setTimeout(() => {
+            // clense content of html
+            // https://stackoverflow.com/a/47140708/10372825
+            let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
+            
+            e.target.innerHTML = (val.body.textContent || "").replace(/\n/g, ' ');
+
+            // set caret to the end of the range
+            // https://stackoverflow.com/a/52085710/10372825
+            let range = document.createRange();
+            range.selectNodeContents(e.target);
+            range.collapse(false);
+            let selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }, 0);
     }
     cleanseInputNewlines(e) {
         // https://stackoverflow.com/a/33239883/10372825
