@@ -99,3 +99,12 @@
 
 }
 
+.syntaxhlpos {
+    color: green;
+}
+.syntaxhlneg {
+    color: red;
+}
+.syntaxhlerr {
+    color: #DE5D47;
+}

@@ -59,26 +59,26 @@ class Search extends Component
 	//let full = [...pos, ...neg]
     console.log(full)
 	if (full.length == 0) { return [0, ""] }
+    let bad = false;    
 	for (let i in full) {
+        const [ color, lhs, rhs ] = tok_info[i];
 	    if (full[i].includes(" ")) {
-            return [0, "Please seperate words with either + or -"];
+            bad = true;
+            full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`
 	    } else {
-            const [ color, lhs, rhs ] = tok_info[i];
-            full[i] = `<span className="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`
+            full[i] = `<span class="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`
         }
 	}
+    console.log(full)
+    console.log('\n')
     if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
 
+    if (bad) return [0, "Please seperate words with either + or -"];
 	return [1, [pos, neg]]
     }
 
     clenseInputPaste(e) {
         setTimeout(() => {
-            // clense content of html
-            // https://stackoverflow.com/a/47140708/10372825
-            let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
-            
-            e.target.innerHTML = (val.body.textContent || "").replace(/\n/g, ' ');
 
             // set caret to the end of the range
             // https://stackoverflow.com/a/52085710/10372825
@@ -103,8 +103,15 @@ class Search extends Component
     }
 
     actuallyHandleTextChange(e) {
-	this.setState({inputval: e.target.innerHTML.replace('<br>', '').toLowerCase()})
-    this.parseString(e.target.innerHTML.replace('<br>', ''), (v) => { e.target.innerHTML = v });
+        setTimeout(() => {
+            // clense content of html
+            // https://stackoverflow.com/a/47140708/10372825
+            let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
+            
+            e.target.innerHTML = (val.body.textContent || "").replace(/\n/g, ' ');
+            this.setState({inputval: e.target.innerHTML.toLowerCase()})
+            this.parseString(e.target.innerHTML, (v) => { e.target.innerHTML = v });
+        }, 0);
     }
 
     handleSubmit(e) {
