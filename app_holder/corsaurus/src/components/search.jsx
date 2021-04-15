@@ -65,7 +65,12 @@ class Search extends Component
 
 
     handleTextChange(e) {
-	this.setState({inputval: e.target.value})
+	this.setState({inputval: e.target.value});
+    }
+
+    actuallyHandleTextChange(e) {
+    console.log(e)
+    e.target.innerHTML = e.target.innerHTML.replace(/\<br\>/g, '');
     }
 
     handleSubmit(e) {
@@ -126,10 +131,14 @@ class Search extends Component
 	return (
 	    <div className="search-wrapper">
 		<FontAwesomeIcon icon={faSearch} onClick={this.handleSubmit} className="icon"/>
-		<input className="search-input" 
-		    onChange={this.handleTextChange}
+		<div className="search-input" 
+		    onChange={this.handleTextChange /* UM HUX @TheEnquirer THIS NEVER GETS CALLED */ } 
+		    onInput={this.actuallyHandleTextChange}
 		    onKeyDown={this.handleSubmit}
 		    placeholder={"king + woman - man"}
+            contentEditable={true}
+            onKeypress={this.cleanseInputNewlines}
+            onPaste={this.clenseInputPaste}
 		/>
 		{(this.state.errormsg != "")?
 		    <div className="errormsg"> 
