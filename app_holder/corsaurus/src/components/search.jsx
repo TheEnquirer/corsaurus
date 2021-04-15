@@ -108,8 +108,8 @@ class Search extends Component
             preCaretRange.selectNodeContents(node);
             preCaretRange.setEnd(range.endContainer, range.endOffset);
             tmp.appendChild(preCaretRange.cloneContents());
-            caretPosition = tmp.innerHTML.length;
-            return caretPosition;
+            caretPosition = new DOMParser().parseFromString(tmp.innerHTML, 'text/html');
+            return caretPosition.body.textContent.length;
         }
         function set_range(pos, element) {
             // based on https://stackoverflow.com/a/24862437/10372825
@@ -134,28 +134,17 @@ class Search extends Component
 
             // loop through text nodes until we find the one that contains the target
             for (let cur of text_nodes) {
-                end_char_count = char_count + cur.parentElement.outerHTML.length;
+                end_char_count = char_count + cur.length;
                 if (pos >= char_count && pos < end_char_count) {
-                    console.log(pos, char_count, pos-char_count-26);
-                    //range.setStart(cur, pos - char_count - 26);
-                    //range.setEnd(cur, pos - char_count - 26);
+                    range.setStart(cur, pos - char_count);
+                    range.setEnd(cur, pos - char_count);
                     foundStart = true;
                     break;
                 }
                 char_count = end_char_count;
             }
             if (!foundStart) range.collapse(false);
-            //for (let cur of text_nodes) {
-            //    //end_char_count = char_count + cur.parentElement.innerHTML.length;
-            //    console.log(pos, char_count, end_char_count);
-            //    ////if (pos >= char_count && (pos < end_char_count || (pos === end_char_count && i < text_nodes.length))) {
-            //    //console.log(cur);
-            //    //if (pos >= char_count && pos < end_char_count) {
-            //    //    range.setStart(cur, pos - char_count);
-            //    //    range.setEnd(cur, pos - char_count+1);
-            //    //}
-            //    char_count += cur.parentElement.innerHTML.length;
-            //}
+
             var selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
@@ -170,17 +159,9 @@ class Search extends Component
             this.setState({inputval: val.toLowerCase()})
             this.parseString(val, (v) => { e.target.innerHTML = v }); // do syntax highlighting
             
-            //console.log(e)
             // set cursor to one after the previous position
             if (e.type === 'paste') return; // TODO: handled by the paste cleanser
-            //console.log(pos, e.target.innerHTML.length)
             set_range(pos, e.target);
-            //let range = document.createRange();
-            //range.setEnd(e.target, pos-1);
-            //range.collapse(false);
-            //let selection = window.getSelection();
-            //selection.removeAllRanges();
-            //selection.addRange(range);
         }, 0);
     }
 
