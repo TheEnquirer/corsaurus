@@ -27,6 +27,8 @@ from flask import Flask, request, jsonify, redirect
 from gensim.models import word2vec
 import traceback
 import json
+import signal
+import sys
 
 GENERATED_MODELS_DIR = '/home/exr0n/vol/storage/model_snapshots/word2vec'
 
@@ -39,20 +41,16 @@ WORDVEC_MODELS = {
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-
-# flask-track-usage analytics :sunglasses:
-app.config['TRACK_USAGE_USE_FREEGEOIP'] = False
-app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'exclude'
-from flask import g
-from flask_track_usage import TrackUsage
-from flask_track_usage.storage.printer import PrintWriter
-from flask_track_usage.storage.output import OutputWriter
-tracker = TrackUsage(app, [
-    PrintWriter(),
-    OutputWriter(transform=lambda s: "OUTPUT: " + str(s))
-])
 vecto = None # the word vector model
 
+logwriter = open('data/usage.log', 'a+')
+def signal_handler(sig, frame):
+    # from https://stackoverflow.com/a/1112350/10372825
+    print('Closing log file...')
+    logwriter.close()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 @app.before_request
 def redirect_https():
@@ -65,7 +63,6 @@ def redirect_https():
   code = 301
   return redirect(url, code=code)
 
-@tracker.include
 @app.route('/', methods=['GET'])
 def root():
   return app.send_static_file('index.html')
@@ -74,11 +71,9 @@ def root():
 def help():
   return "No help page yet, contact us at support@corsaur.us :D"
 
-@tracker.include
 # @cross_origin()
 @app.route('/query', methods=['PUT'])
 def query():
-  g.track_var["api"] = True
   global vecto
   #app.logger.info('RECEIVED A QUERY.')
   try:
