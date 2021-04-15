@@ -88,18 +88,6 @@ class Search extends Component
         return [1, [pos, neg]]
     }
 
-    //clenseInputPaste(e) {
-    //    setTimeout(() => {
-    //        // set caret to the end of the range
-    //        // https://stackoverflow.com/a/52085710/10372825
-    //        let range = document.createRange();
-    //        range.selectNodeContents(e.target);
-    //        range.collapse(false);
-    //        let selection = window.getSelection();
-    //        selection.removeAllRanges();
-    //        selection.addRange(range);
-    //    }, 0);
-    //}
     cleanseInputNewlines(e) {
         // https://stackoverflow.com/a/33239883/10372825
         if (e.keyCode === 13) {

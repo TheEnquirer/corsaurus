@@ -7,21 +7,21 @@ import autoBind from 'react-autobind';
 class Bars extends Component 
 {
     constructor(props) 
-	{
-	    super(props);
-	    autoBind(this);
+    {
+        super(props);
+        autoBind(this);
 
-	    this.state = {
+        this.state = {
             data: this.props.data,
             mounted: false,
             //shown: 1,
             loading: true,
-	    hovering: -1,
-	    copied: -1,
-	    };
+            hovering: -1,
+            copied: -1,
+        };
 
-	    this.more = React.createRef();
-	}
+        this.more = React.createRef();
+    }
 
     wid = -1
 
