@@ -164,7 +164,6 @@ class Search extends Component
             val = (val.body.textContent || "").replace(/\n/g, ' ');
         
             this.setState({inputval: val.toLowerCase()})
-            //this.handleSubmit(e);
             this.parseString(this.state.inputval, (v) => { e.target.innerHTML = v });
 
         
@@ -175,7 +174,7 @@ class Search extends Component
     handleSubmit(e) {
         if (this.state.inputval != this.state.prevSearch) {
             this.setState({prevSearch: this.state.inputval})
-            let parsed = this.parseString(this.state.inputval, (v) => { e.target.innerHTML = v });
+            let parsed = this.parseString(this.state.inputval);
             if (parsed[0] == 1) {
                 this.makeRequest( 
                     {
