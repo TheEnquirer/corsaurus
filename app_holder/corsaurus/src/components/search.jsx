@@ -63,14 +63,20 @@ class Search extends Component
 	return [1, [pos, neg]]
     }
 
-
+    clenseInputPaste(e) {
+        console.log('paste', e);
+    }
+    cleanseInputNewlines(e) {
+        if (e.keyCode === 13) e.preventDefault();
+    }
+    
     handleTextChange(e) {
 	this.setState({inputval: e.target.value});
     }
 
     actuallyHandleTextChange(e) {
-    console.log(e)
-    e.target.innerHTML = e.target.innerHTML.replace(/\<br\>/g, '');
+    console.log(e);
+    //e.target.innerHTML = e.target.innerHTML.replace(/\<br\>/g, '');
     }
 
     handleSubmit(e) {
@@ -137,7 +143,7 @@ class Search extends Component
 		    onKeyDown={this.handleSubmit}
 		    placeholder={"king + woman - man"}
             contentEditable={true}
-            onKeypress={this.cleanseInputNewlines}
+            onKeyDown={this.cleanseInputNewlines}
             onPaste={this.clenseInputPaste}
 		/>
 		{(this.state.errormsg != "")?
