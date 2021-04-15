@@ -65,7 +65,7 @@ class Search extends Component
 
 
     handleTextChange(e) {
-	this.setState({inputval: e.target.value})
+	this.setState({inputval: e.target.value.toLowerCase()})
     }
 
     handleSubmit(e) {
