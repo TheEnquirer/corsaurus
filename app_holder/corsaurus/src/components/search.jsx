@@ -150,26 +150,35 @@ class Search extends Component
                 }
                 char_count = end_char_count;
             }
-            if (!foundStart) range.collapse(false);
+            if (!foundStart) {
+                const last_node = text_nodes[text_nodes.length-1];
+                //range.selectNodeContents(text_nodes[text_nodes.length-1].parentElement)
+                console.log(last_node.length);
+                range.setEnd(last_node, last_node.length-1);
+                range.collapse(false);
+            }
 
             var selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
         }
         setTimeout(() => {
-            //console.log(e.target.innerHTML);
+            console.log('current is ', e.target.innerHTML);
             let pos = getCaretPosition(e.target);
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
             val = (val.body.textContent || "").replace(/\n/g, ' ');
-
+        
             this.setState({inputval: val.toLowerCase()})
-            this.parseString(val, (v) => { e.target.innerHTML = v }); // do syntax highlighting
-
-            // set cursor to one after the previous position
-            if (e.type === 'paste') return; // TODO: handled by the paste cleanser
-            set_range(pos, e.target);
+            this.parseString(val); // do syntax highlighting
+            this.parseString(val, (v) => {
+                console.log('setting to', v);
+                e.target.innerHTML = v
+                console.log('set to', e.target.innerHTML);
+            }); // do syntax highlighting
+        
+            set_range(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
         }, 0);
     }
 
