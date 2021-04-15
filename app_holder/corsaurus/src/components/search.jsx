@@ -75,7 +75,6 @@ class Search extends Component
 
     clenseInputPaste(e) {
         setTimeout(() => {
-
             // set caret to the end of the range
             // https://stackoverflow.com/a/52085710/10372825
             let range = document.createRange();
@@ -113,16 +112,25 @@ class Search extends Component
             return caretPosition;
         }
         setTimeout(() => {
-            let pos = getCaretPosition(e.target());
+            let pos = getCaretPosition(e.target);
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
             val = (val.body.textContent || "").replace(/\n/g, ' ');
 
-
             this.setState({inputval: val.toLowerCase()})
             this.parseString(val, (v) => { e.target.innerHTML = v }); // do syntax highlighting
             
+            console.log(e)
+            // set cursor to one after the previous position
+            if (e.type === 'paste') return; // handled by the paste cleanser
+            let range = document.createRange();
+            console.log(pos, e.target.innerHTML.length)
+            range.setEnd(e.target, pos-1);
+            range.collapse(false);
+            let selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
         }, 0);
     }
 
