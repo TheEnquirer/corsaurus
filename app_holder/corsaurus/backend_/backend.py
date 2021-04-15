@@ -39,6 +39,18 @@ WORDVEC_MODELS = {
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+
+# flask-track-usage analytics :sunglasses:
+app.config['TRACK_USAGE_USE_FREEGEOIP'] = False
+app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'exclude'
+from flask import g
+from flask_track_usage import TrackUsage
+from flask_track_usage.storage.printer import PrintWriter
+from flask_track_usage.storage.output import OutputWriter
+tracker = TrackUsage(app, [
+    PrintWriter(),
+    OutputWriter(transform=lambda s: "OUTPUT: " + str(s))
+])
 vecto = None # the word vector model
 
 
@@ -53,6 +65,7 @@ def redirect_https():
   code = 301
   return redirect(url, code=code)
 
+@tracker.include
 @app.route('/', methods=['GET'])
 def root():
   return app.send_static_file('index.html')
@@ -61,9 +74,11 @@ def root():
 def help():
   return "No help page yet, contact us at support@corsaur.us :D"
 
+@tracker.include
 # @cross_origin()
 @app.route('/query', methods=['PUT'])
 def query():
+  g.track_var["api"] = True
   global vecto
   #app.logger.info('RECEIVED A QUERY.')
   try:
