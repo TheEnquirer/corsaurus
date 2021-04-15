@@ -103,8 +103,13 @@ def query():
       res = vecto.similar_by_vector(content['vector'], content['num'])
     elif mode == 'get_vector':                                                          # get vector of a word
       res = vecto[content['word']]
-    elif mode == 'relationships':                                                        # get words that represent the relationships between words similar to a sum and the sum
+    elif mode == 'relationships':                                                       # get words that represent the relationships between words similar to a sum and the sum
       res = relationship_determiner(content['pos'], content['neg'], content['num'], content['relationship_num'])
+    elif mode == 'vocabcheck':
+      if 'word' in content:
+        res = content['word'] in vecto.key_to_index
+      else:
+        res = [(w in vecto.key_to_index) for w in content['words']]
 
     if res is None:
       return jsonify({ 'error': 'invalid_mode' })
@@ -119,7 +124,7 @@ def query():
 
 def load_model():
   """
-  Loads word vector model into memory if not already loaded. 
+  Loads word vector model into memory if not already loaded.
   Must be called when initializing backend and should be called whenever using vecto.
   """
   global vecto
@@ -153,7 +158,7 @@ def manual_vector_sum(pos, neg=[]):
     for j in i:
       sum[index] = sum[index] + j
       index += 1
-  
+
   for x in neg:
     index = 0
     for y in x:
@@ -213,7 +218,7 @@ def relationship_determiner(pos, neg, n1=10, n2=1):
   for j in relationship_vectors:
     relationships[index] = vecto.similar_by_vector(j, n2)
     index += 1
-  
+
   return relationships
 
 app.logger.info('STARTING.')
