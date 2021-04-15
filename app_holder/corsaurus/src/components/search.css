@@ -107,4 +107,5 @@
 }
 .syntaxhlerr {
     color: #DE5D47;
+    text-decoration: underline;
 }
