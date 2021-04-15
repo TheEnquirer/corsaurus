@@ -45,8 +45,12 @@ class Search extends Component
             // eslint-disable-next-line
             if (p == '+') { pos.push(mod) } else { neg.push(mod) }
             full.push(mod);
-            //fetch('/query', ); // TODO: check vocab here
-            tok_info.push([p == '+' ? 'pos' : 'neg', lp, i]);
+
+            this.query({ 'mode': 'vocabcheck', 'word': mod })
+                .then((isvalid) => {
+                    console.log(isvalid);
+                    tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
+                });
         }
 
         for (let i in v) 
@@ -224,6 +228,17 @@ class Search extends Component
                     }
                 })
                 .catch(console.error);
+    }
+
+    async query(req) {
+        fetch('/query', { method: 'put', body: JSON.stringify(req) })
+            .then(res => res.json())
+            .then(data => {
+                if (data.hasOwnProperty('error'))
+                    throw data.error;
+                else
+                    return data.success;
+            });
     }
 
     componentDidMount() {
