@@ -68,7 +68,7 @@ if app.env == 'production':
       # https://stackoverflow.com/a/279597/10372825
       if not hasattr(logger, "counter") or logger.counter[0] > 10:
         if hasattr(logger, 'counter'):
-          logwriter.writerow(logger.counter)
+          logwriter.writerow([datetime.now().isoformat(), logger.counter])
           logfile.flush()
         logger.counter = [0] * (len(LOG_SUMMARIZE_ROUTES) + 1)
 
