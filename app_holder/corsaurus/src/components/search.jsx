@@ -66,7 +66,7 @@ class Search extends Component
     clenseInputPaste(e) {
         // https://stackoverflow.com/a/47140708/10372825
         let doc = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
-        e.target.innerHTML = doc.body.textContent.replace(/\n/g, ' ') || "";
+        e.target.innerHTML = doc.body.textContent.replace(/\n/g, ' ').replace(/\<br\>/g, ' ') || "";
     }
     cleanseInputNewlines(e) {
         // https://stackoverflow.com/a/33239883/10372825
@@ -78,8 +78,7 @@ class Search extends Component
     }
 
     actuallyHandleTextChange(e) {
-    console.log(e);
-    //e.target.innerHTML = e.target.innerHTML.replace(/\<br\>/g, '');
+    console.log(this.parseString(e.target.innerHTML)[1]);
     }
 
     handleSubmit(e) {
