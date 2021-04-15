@@ -91,6 +91,7 @@ class Search extends Component
         let lp = 0;
         let p = "+";
         let full = [];
+        let mods = [];
         let tok_info = [];
 
         this.pusher = (i) => {
@@ -98,6 +99,7 @@ class Search extends Component
             // eslint-disable-next-line
             if (p == '+') { pos.push(mod) } else { neg.push(mod) }
             full.push(mod);
+            mods.push(mod);
 
             tok_info.push([p == '+' ? 'pos' : 'neg', lp, i]);
         }
@@ -120,27 +122,27 @@ class Search extends Component
         }
 
         if (full.length == 0) { return [0, ""] }
-        let syntax_highlighted = "";
         let bad = false;    
         for (let i in full) {
             const [ color, lhs, rhs ] = tok_info[i];
             if (full[i].includes(" ")) {
                 bad = true;
-                syntax_highlighted += `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`;
+                full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`
             } else {
-                syntax_highlighted += `<span class="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`;
+                full[i] = `<span class="syntaxhl${color}">${v.slice(lhs, rhs)}</span>`
             }
         }
-        if (typeof innerHTMLSetter === 'function') innerHTMLSetter(syntax_highlighted);
+        if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
 
         if (bad) return [0, "Please seperate words with either + or -"];
 
         // out of vocab hl
         // NOTE: it'd be cool to error highlight on out of vocab, but may require asyncifying everything
-        this.query({ 'mode': 'vocabcheck', 'words': full.map(w) })
+        //this.query({ 'mode': 'vocabcheck', 'words': full.map(w => w.slice(26, -7 /* NOTE: hacky as heck, relies on className len */).trim()) })
+        this.query({ 'mode': 'vocabcheck', 'words': mods })
             .then((wear_a_mask) => {
                 console.log('in parse', wear_a_mask);
-                let wash_ur_hands = full.map((v, i) => i ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
+                let wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
                 console.log(wash_ur_hands)
                 innerHTMLSetter(wash_ur_hands.join(""));
                 //tok_info.push([isvalid ? (p == '+' ? 'pos' : 'neg') : 'err', lp, i]);
@@ -222,7 +224,6 @@ class Search extends Component
         return fetch('/query', { method: 'put', body: JSON.stringify(req) })
             .then(res => res.json())
             .then(data => {
-                console.log('got from query', data);
                 if (data.hasOwnProperty('error'))
                     throw data.error;
                 else
