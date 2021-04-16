@@ -100,10 +100,13 @@ class Search extends Component
             let mod = v.slice(lp, i).replace(/((?<!\\)[+-\\])+/, "").trim();
             // eslint-disable-next-line
             if (p == '+') { pos.push(mod) } else { neg.push(mod) }
-            full.push(mod);
+            full.push(mod); // NOTE: could get rid of this and combine error parsing below with the other `let bad = false`
             mods.push(mod);
 
-            tok_info.push([p == '+' ? 'pos' : 'neg', lp, i]);
+            let bad = false;
+            if (mod.length == 0) bad = true;
+
+            tok_info.push([bad ? 'err' : (p == '+' ? 'pos' : 'neg'), lp, i]);
         }
 
         for (let i in v) 
@@ -137,8 +140,7 @@ class Search extends Component
         if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
 
         if (bad) return [0, "Please seperate words with either + or -"];
-        if (mods[mods.length-1].length == 0)
-            return [0, "Extraneous trailing operator..."];
+        if (mods.filter(v => v.length == 0).length) return [0, "Extraneous operator"]; // NOTE: this logic handled both here and in pusher
 
         // out of vocab hl
         if (typeof innerHTMLSetter === 'function') 
@@ -148,7 +150,7 @@ class Search extends Component
                     if (socially_distance.length > 0)
                         this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${JSON.stringify(socially_distance).slice(1, -1).replace(/,/g, ", ")}` });
                     else this.setState({ errormsg: '' });
-                    target.childNodes.forEach((v, i) => { if (socially_distance[i]) v.className = 'syntaxhlerr'; });
+                    target.childNodes.forEach((v, i) => { if (!wear_a_mask[i]) v.className = 'syntaxhlerr'; });
                     //const wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
                     //innerHTMLSetter(wash_ur_hands.join(""));
                 }).catch(console.error);
