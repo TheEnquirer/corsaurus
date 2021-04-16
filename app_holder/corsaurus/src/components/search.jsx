@@ -150,7 +150,7 @@ class Search extends Component
                     const socially_distance = Array.from(target.childNodes).filter((v, i) => !wear_a_mask[i] && v.className != 'syntaxhlerr');
                     if (socially_distance.length > 0) {
                         this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${
-                            JSON.stringify(socially_distance.map(v => v.innerHTML)).slice(1, -1).replace(/,/g, ", ")}` });
+                            JSON.stringify(mods.filter((_, i) => !wear_a_mask[i])).slice(1, -1).replace(/,/g, ", ")}` });
                         socially_distance.forEach(v => { v.className = 'syntaxhlerr'; });
                     }
                     //const wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
