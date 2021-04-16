@@ -65,7 +65,6 @@ class Search extends Component
         // loop through text nodes until we find the one that contains the target
         for (let cur of text_nodes) {
             end_char_count = char_count + cur.length;
-            console.log(pos, char_count, end_char_count);
             if (pos >= char_count && pos < end_char_count) {
                 range.setStart(cur, pos - char_count+1);
                 range.setEnd(cur, pos - char_count+1);
@@ -138,6 +137,8 @@ class Search extends Component
         if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
 
         if (bad) return [0, "Please seperate words with either + or -"];
+        if (mods[mods.length-1].length == 0)
+            return [0, "Extraneous trailing operator..."];
 
         // out of vocab hl
         if (typeof innerHTMLSetter === 'function') 
@@ -171,11 +172,11 @@ class Search extends Component
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
-            val = (val.body.textContent || "").replace(/\n/g, '&nbsp;').replace(/ /g, '&nbsp;');
+            val = (val.body.textContent || "").replace(/\&nbsp;/g, ' ').replace(/\n/g, ' ');
         
             this.setState({inputval: val.toLowerCase()});
             this.parseString(this.state.inputval, (v) => {
-                e.target.innerHTML = v;
+                e.target.innerHTML = v.replace(/ /g, '&nbsp;').replace(/\<span\&nbsp\;class\=\"syntaxhl(pos|neg|err)"\>/g, '<span class="syntaxhl$1">');
                 this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
                 //if (e.target.innerHTML.length == 0)
                 //    e.target.innerHTML = '&nbsp;';
