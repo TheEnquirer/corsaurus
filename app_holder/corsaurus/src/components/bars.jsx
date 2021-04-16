@@ -71,7 +71,7 @@ class Bars extends Component
             <div>
                 <div className="bars-wrapper">
                     {(this.state.mounted && this.state.data)? this.state.data.slice(0, 10*this.props.shown).map((item, i) => (
-                        <div className="bar-unit" style={{width: this.wid+620}}>
+                        <div className="bar-unit" style={{width: this.wid+620}} key={item[0]+i}>
                             <div 
 				className="word-wrapper" 
 				style={{width: this.wid+10}}
@@ -82,17 +82,17 @@ class Bars extends Component
 			    >
                                 <div 
 				    className="word"
-				    onMouseEnter={() => { if (this.state.hovering != i) this.setState({hovering: i}) }}
-				    onMouseLeave={() => { if (this.state.hovering == i) this.setState({hovering: -1}) }}
+				    onMouseEnter={() => { if (this.state.hovering !== i) this.setState({hovering: i}) }}
+				    onMouseLeave={() => { if (this.state.hovering === i) this.setState({hovering: -1}) }}
 				>
 				    <span 
 					className="tooltip" 
 					style={{
-					    opacity: `${(this.state.hovering == i)? "1" : "0"}`, 
-					    background: `${(this.state.copied == i)? "#148DE0" : "#454545"}`
+					    opacity: `${(this.state.hovering === i)? "1" : "0"}`, 
+					    background: `${(this.state.copied === i)? "#148DE0" : "#454545"}`
 					}}
 				    >
-					{(this.state.copied == i)? "copied!" : "copy"}
+					{(this.state.copied === i)? "copied!" : "copy"}
 				    </span>
 				    {item[0]}
 				</div>

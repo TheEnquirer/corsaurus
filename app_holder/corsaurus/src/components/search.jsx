@@ -86,6 +86,12 @@ class Search extends Component
         selection.addRange(range);
     }
 
+    contains(str, i) // if string contains *character* i
+    {
+        for (const c of str) { if (c === i) { return true; } }
+        return false;
+    }
+
     parseString(v, innerHTMLSetter=null, target=null) 
     {
         let pos = [];
@@ -104,9 +110,9 @@ class Search extends Component
             mods.push(mod);
 
             let bad = false;
-            if (mod.length == 0) bad = true;
+            if (mod.length === 0) bad = true;
 
-            tok_info.push([bad ? 'err' : (p == '+' ? 'pos' : 'neg'), lp, i]);
+            tok_info.push([bad ? 'err' : (p === '+' ? 'pos' : 'neg'), lp, i]);
         }
 
         for (let i in v) 
@@ -126,11 +132,15 @@ class Search extends Component
             if (i == v.length - 1) { this.pusher(i+1) } 
         }
 
-        if (full.length == 0) { return [0, ""] }
-        let bad = false;    
+        if (full.length === 0) { return [0, ""] }
+        let bad = false; 
+        console.log(full);   
         for (let i in full) {
             const [ color, lhs, rhs ] = tok_info[i];
-            if (full[i].includes(" ")) {    // TODO: this inclusion is broken?? if the searched for string isn't the second last char
+            console.log(full[i]);
+            //if (full[i].includes(" ")) {    // TODO: this inclusion is broken?? if the searched for string isn't the second last char
+            if (this.contains(full[i], " ")) { // TODO: even this custom function I made doesn't solve the problem... weird behavior
+                console.log("Word contains space.");
                 bad = true;
                 full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`;
             } else {
@@ -140,14 +150,14 @@ class Search extends Component
         if (typeof innerHTMLSetter === 'function') innerHTMLSetter(full.join(""));
 
         if (bad) return [0, "Please seperate words with either + or -"];
-        if (mods.filter(v => v.length == 0).length) return [0, "Extraneous operator"]; // NOTE: this logic handled both here and in pusher
+        if (mods.filter(v => v.length === 0).length) return [0, "Extraneous operator"]; // NOTE: this logic handled both here and in pusher
 
         // out of vocab hl
         if (typeof innerHTMLSetter === 'function') 
             this.query({ 'mode': 'vocabcheck', 'words': mods })
                 .then((wear_a_mask) => {
                     // Array.from() on nodeList: https://stackoverflow.com/a/32767009
-                    const socially_distance = Array.from(target.childNodes).filter((v, i) => !wear_a_mask[i] && v.className != 'syntaxhlerr');
+                    const socially_distance = Array.from(target.childNodes).filter((v, i) => !wear_a_mask[i] && v.className !== 'syntaxhlerr');
                     if (socially_distance.length > 0) {
                         this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${
                             JSON.stringify(mods.filter((_, i) => !wear_a_mask[i])).slice(1, -1).replace(/,/g, ", ")}` });
@@ -172,7 +182,7 @@ class Search extends Component
     handleTextChange(e) {
         setTimeout(() => {
             let pos = this.getCaretPosition(e.target);
-            if (e.target.innerHTML.length == 1) {
+            if (e.target.innerHTML.length === 1) {
                 e.target.innerHTML = '<span class="syntaxhlpos">' + e.target.innerHTML + '</span>';
             }
             // clense content of html
@@ -192,10 +202,10 @@ class Search extends Component
     }
 
     handleSubmit() {
-        if (this.state.inputval != this.state.prevSearch) {
+        if (this.state.inputval !== this.state.prevSearch) {
             this.setState({prevSearch: this.state.inputval});
             let parsed = this.parseString(this.state.inputval);
-            if (parsed[0] == 1) {
+            if (parsed[0] === 1) {
                 this.queryNearestWordvecs( 
                     {
                         'num': 100,
@@ -255,8 +265,8 @@ class Search extends Component
             onKeyDown={this.cleanseInputNewlines}
             onPaste={this.clenseInputPaste}
             suppressContentEditableWarning={true /* iff you know what ur doing, which I don't https://stackoverflow.com/a/49639256/10372825 */}
-            ><span class={"syntaxhlpos"}>king</span> <span class={"syntaxhlneg"}>- man</span> + <span class={"syntaxhlpos"}>woman</span></div>
-            {(this.state.errormsg != "")?
+            ><span className={"syntaxhlpos"}>king</span> <span className={"syntaxhlneg"}>- man</span> + <span className={"syntaxhlpos"}>woman</span></div>
+            {(this.state.errormsg !== "")?
                 <div className="errormsg"> 
                 <FontAwesomeIcon icon={faExclamationTriangle} className="error-icon"/>
                 {this.state.errormsg}
