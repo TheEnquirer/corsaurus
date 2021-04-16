@@ -196,7 +196,7 @@ class Search extends Component
             this.setState({prevSearch: this.state.inputval});
             let parsed = this.parseString(this.state.inputval);
             if (parsed[0] == 1) {
-                this.makeRequest( 
+                this.queryNearestWordvecs( 
                     {
                         'num': 100,
                         'pos': parsed[1][0],
@@ -210,25 +210,17 @@ class Search extends Component
         }
     }
 
-    makeRequest(request) 
+    queryNearestWordvecs(request)
     {
-        fetch('/query', 
-            {
+        this.query({
                 method: 'put',
                 body: JSON.stringify(request),
                 headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-            })
-            .then(res => res.json()).then((data) => 
-                {
-                    if (data.hasOwnProperty('error')) {
-                        throw data.error;
-                    } else {
-                        this.setState({errormsg: ""})
-                        this.props.set(data.success)
-                        this.props.setShown(1)
-                    }
-                })
-                .catch(console.error);
+            }).then(data => {
+                this.setState({errormsg: ""})
+                this.props.set(data)
+                this.props.setShown(1)
+            });
     }
 
     async query(req) {
@@ -239,12 +231,13 @@ class Search extends Component
                     throw data.error;
                 else
                     return data.success;
-            });
+            })
+            .catch(console.error);
     }
 
     componentDidMount() {
         this.setState({mounted: true})
-        this.makeRequest(
+        this.queryNearestWordvecs(
             {
                 'num': 100,
                 'pos': ['king', 'woman'],
