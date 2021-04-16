@@ -130,7 +130,7 @@ class Search extends Component
         let bad = false;    
         for (let i in full) {
             const [ color, lhs, rhs ] = tok_info[i];
-            if (full[i].includes(" ")) {
+            if (full[i].includes(" ")) {    // TODO: this inclusion is broken?? if the searched for string isn't the second last char
                 bad = true;
                 full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`;
             } else {
@@ -146,15 +146,18 @@ class Search extends Component
         if (typeof innerHTMLSetter === 'function') 
             this.query({ 'mode': 'vocabcheck', 'words': mods })
                 .then((wear_a_mask) => {
-                    const socially_distance = mods.filter((_, i) => !wear_a_mask[i]);
-                    if (socially_distance.length > 0)
-                        this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${JSON.stringify(socially_distance).slice(1, -1).replace(/,/g, ", ")}` });
-                    else this.setState({ errormsg: '' });
-                    target.childNodes.forEach((v, i) => { if (!wear_a_mask[i]) v.className = 'syntaxhlerr'; });
+                    // Array.from() on nodeList: https://stackoverflow.com/a/32767009
+                    const socially_distance = Array.from(target.childNodes).filter((v, i) => !wear_a_mask[i] && v.className != 'syntaxhlerr');
+                    if (socially_distance.length > 0) {
+                        this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${
+                            JSON.stringify(socially_distance.map(v => v.innerHTML)).slice(1, -1).replace(/,/g, ", ")}` });
+                        socially_distance.forEach(v => { v.className = 'syntaxhlerr'; });
+                    }
                     //const wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
                     //innerHTMLSetter(wash_ur_hands.join(""));
                 }).catch(console.error);
 
+        this.setState({ errormsg: '' });
         return [1, [pos, neg]];
     }
 
@@ -178,12 +181,13 @@ class Search extends Component
             val = (val.body.textContent || "").replace(/\&nbsp;/g, ' ').replace(/\n/g, ' ');
         
             this.setState({inputval: val.toLowerCase()});
-            this.parseString(this.state.inputval, (v) => {
+            let [ ok, g ] = this.parseString(this.state.inputval, (v) => {
                 e.target.innerHTML = v.replace(/ /g, '&nbsp;').replace(/\<span\&nbsp\;class\=\"syntaxhl(pos|neg|err)"\>/g, '<span class="syntaxhl$1">');
                 this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
                 //if (e.target.innerHTML.length == 0)
                 //    e.target.innerHTML = '&nbsp;';
             }, e.target);
+            if (!ok) this.setState({ 'errormsg': g }); // but then we clear the error with in the parse itself.... this should probably go in the parseString too
         }, 0);
     }
 
