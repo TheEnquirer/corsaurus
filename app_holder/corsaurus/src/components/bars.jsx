@@ -45,6 +45,7 @@ class Bars extends Component
         if (this.props !== prevProps) {
             this.processData()
         }
+        if (this.state.data.length !== 0 && this.state.loading) { this.setState({ loading: false }); }
     }
 
     moreIndicator() 
@@ -52,7 +53,6 @@ class Bars extends Component
         if (this.state.data.length === 0) { return ""; }
         else
         {
-            if (this.state.loading) { this.setState({ loading: false }); }
             if (this.props.shown*10 <= this.state.data.length) { return "▼"; }
             else { return "∅"; }
         }
