@@ -178,11 +178,11 @@ class Search extends Component
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
-            val = (val.body.textContent || "").replace(/\&nbsp;/g, ' ').replace(/\n/g, ' ');
+            val = (val.body.textContent || "").replace(/&nbsp;/g, ' ').replace(/\n/g, ' ');
         
             this.setState({inputval: val.toLowerCase()});
             let [ ok, g ] = this.parseString(this.state.inputval, (v) => {
-                e.target.innerHTML = v.replace(/ /g, '&nbsp;').replace(/\<span\&nbsp\;class\=\"syntaxhl(pos|neg|err)"\>/g, '<span class="syntaxhl$1">');
+                e.target.innerHTML = v.replace(/ /g, '&nbsp;').replace(/<span&nbsp;class="syntaxhl(pos|neg|err)">/g, '<span class="syntaxhl$1">');
                 this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
                 //if (e.target.innerHTML.length == 0)
                 //    e.target.innerHTML = '&nbsp;';
