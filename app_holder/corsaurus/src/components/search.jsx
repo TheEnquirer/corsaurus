@@ -23,7 +23,8 @@ class Search extends Component
 
     clearOnFirstEnter(e) {
         if (this.state.firstTime) {
-            e.target.innerHTML = "&nbsp;";
+            //e.target.innerHTML = "&nbsp;";
+            e.target.innerHTML = "";
             this.setState({ firstTime: false });
         }
     }
@@ -64,9 +65,10 @@ class Search extends Component
         // loop through text nodes until we find the one that contains the target
         for (let cur of text_nodes) {
             end_char_count = char_count + cur.length;
+            console.log(pos, char_count, end_char_count);
             if (pos >= char_count && pos < end_char_count) {
-                range.setStart(cur, pos - char_count);
-                range.setEnd(cur, pos - char_count);
+                range.setStart(cur, pos - char_count+1);
+                range.setEnd(cur, pos - char_count+1);
                 foundStart = true;
                 break;
             }
@@ -75,7 +77,8 @@ class Search extends Component
         if (!foundStart) {
             const last_node = text_nodes[text_nodes.length-1];
             if (typeof last_node == 'undefined') return;
-            range.setEnd(last_node, last_node.length);
+            //range.setEnd(last_node, last_node.length);
+            range.selectNodeContents(element);
             range.collapse(false);
         }
 
@@ -173,6 +176,8 @@ class Search extends Component
             this.parseString(this.state.inputval, (v) => {
                 e.target.innerHTML = v;
                 this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
+                //if (e.target.innerHTML.length == 0)
+                //    e.target.innerHTML = '&nbsp;';
             });
         }, 0);
     }
