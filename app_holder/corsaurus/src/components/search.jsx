@@ -66,8 +66,8 @@ class Search extends Component
         for (let cur of text_nodes) {
             end_char_count = char_count + cur.length;
             if (pos >= char_count && pos < end_char_count) {
-                range.setStart(cur, pos - char_count+1);
-                range.setEnd(cur, pos - char_count+1);
+                range.setStart(cur, pos - char_count);
+                range.setEnd(cur, pos - char_count);
                 foundStart = true;
                 break;
             }
@@ -168,9 +168,10 @@ class Search extends Component
 
     handleTextChange(e) {
         setTimeout(() => {
-            if (e.target.innerHTML.length == 1)
-                e.target.innerHTML = '<span class="syntaxhlpos">' + e.target.innerHTML + '</span>';
             let pos = this.getCaretPosition(e.target);
+            if (e.target.innerHTML.length == 1) {
+                e.target.innerHTML = '<span class="syntaxhlpos">' + e.target.innerHTML + '</span>';
+            }
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
