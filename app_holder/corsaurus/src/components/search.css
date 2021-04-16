@@ -21,8 +21,9 @@
 }
 
 .search-input {
+    /*font-weight: 600;*/
     /*margin-top: 100px;*/
-    height: 43px;
+    height: 36px;
     /*width: 90%;*/
     min-width: 90%;
     border-radius: 11px;
@@ -100,12 +101,15 @@
 }
 
 .syntaxhlpos {
-    color: green;
+    color: #66C0A2;
+    font-weight: 400;
 }
 .syntaxhlneg {
-    color: red;
+    font-weight: 400;
+    color: #CE7272;
 }
 .syntaxhlerr {
-    color: #DE5D47;
+    color: #555555;
+    font-weight: 400;
     text-decoration: underline;
 }

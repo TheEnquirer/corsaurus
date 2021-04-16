@@ -74,7 +74,7 @@ class Bars extends Component
                         <div className="bar-unit" style={{width: this.wid+620}}>
                             <div 
 				className="word-wrapper" 
-				style={{width: this.wid}}
+				style={{width: this.wid+10}}
 				onClick={() => {
 				    navigator.clipboard.writeText(item[0])
 				    this.setState({copied: i})
