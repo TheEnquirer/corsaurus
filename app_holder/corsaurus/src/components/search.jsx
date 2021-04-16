@@ -87,7 +87,7 @@ class Search extends Component
         selection.addRange(range);
     }
 
-    parseString(v, innerHTMLSetter=null) 
+    parseString(v, innerHTMLSetter=null, target=null) 
     {
         let pos = [];
         let neg = [];
@@ -143,12 +143,13 @@ class Search extends Component
         if (typeof innerHTMLSetter === 'function') 
             this.query({ 'mode': 'vocabcheck', 'words': mods })
                 .then((wear_a_mask) => {
-                    const wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
                     const socially_distance = mods.filter((_, i) => !wear_a_mask[i]);
                     if (socially_distance.length > 0)
                         this.setState({ errormsg: `Unrecognized word${socially_distance.length > 1 ? 's' : ''} ${JSON.stringify(socially_distance).slice(1, -1).replace(/,/g, ", ")}` });
                     else this.setState({ errormsg: '' });
-                    innerHTMLSetter(wash_ur_hands.join(""));
+                    target.childNodes.forEach((v, i) => { if (socially_distance[i]) v.className = 'syntaxhlerr'; });
+                    //const wash_ur_hands = full.map((v, i) => wear_a_mask[i] ? v : v.replace(/syntaxhl(pos|neg)/, 'syntaxhlerr'));
+                    //innerHTMLSetter(wash_ur_hands.join(""));
                 }).catch(console.error);
 
         return [1, [pos, neg]];
@@ -170,7 +171,7 @@ class Search extends Component
             // clense content of html
             // https://stackoverflow.com/a/47140708/10372825
             let val = new DOMParser().parseFromString(e.target.innerHTML, 'text/html');
-            val = (val.body.textContent || "").replace(/\n/g, ' ');
+            val = (val.body.textContent || "").replace(/\n/g, '&nbsp;').replace(/ /g, '&nbsp;');
         
             this.setState({inputval: val.toLowerCase()});
             this.parseString(this.state.inputval, (v) => {
@@ -178,7 +179,7 @@ class Search extends Component
                 this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
                 //if (e.target.innerHTML.length == 0)
                 //    e.target.innerHTML = '&nbsp;';
-            });
+            }, e.target);
         }, 0);
     }
 
