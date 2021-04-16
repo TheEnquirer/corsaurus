@@ -86,12 +86,6 @@ class Search extends Component
         selection.addRange(range);
     }
 
-    contains(str, i) // if string contains *character* i
-    {
-        for (const c of str) { if (c === i) { return true; } }
-        return false;
-    }
-
     parseString(v, innerHTMLSetter=null, target=null) 
     {
         let pos = [];
@@ -138,9 +132,7 @@ class Search extends Component
         for (let i in full) {
             const [ color, lhs, rhs ] = tok_info[i];
             //console.log(full[i]); // for debugging space inclusion
-            //if (full[i].includes(" ")) {    // TODO: this inclusion is broken?? if the searched for string isn't the second last char
-            if (this.contains(full[i], " ")) { // TODO: even this custom function I made doesn't solve the problem... weird behavior
-                console.log("Word contains space.");
+            if (full[i].includes(" ") || full[i].includes(String.fromCharCode(160))) { 
                 bad = true;
                 full[i] = `<span class="syntaxhlerr">${v.slice(lhs, rhs)}</span>`;
             } else {
