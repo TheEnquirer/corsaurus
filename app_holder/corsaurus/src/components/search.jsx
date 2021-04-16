@@ -212,11 +212,8 @@ class Search extends Component
 
     queryNearestWordvecs(request)
     {
-        this.query({
-                method: 'put',
-                body: JSON.stringify(request),
-                headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-            }).then(data => {
+        this.query(request)
+            .then(data => {
                 this.setState({errormsg: ""})
                 this.props.set(data)
                 this.props.setShown(1)
