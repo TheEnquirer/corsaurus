@@ -194,7 +194,7 @@ class Search extends Component
     }
 
     handleSubmit() {
-        if (this.state.inputval !== this.state.prevSearch) {
+        if ((this.state.inputval !== this.state.prevSearch) && this.state.errormsg == "") {
             this.setState({prevSearch: this.state.inputval});
             let parsed = this.parseString(this.state.inputval);
             if (parsed[0] === 1) {
