@@ -44,8 +44,8 @@ class App extends Component
 		    <p
 			onMouseEnter={() => this.setState({anim: "slide-anim"})}
 			onMouseLeave={() => this.setState({anim: ""})}
-            className={`slideout ${this.state.anim}`}
-            > /kôrˈsôrəs/<br /> Made with ❤️ by Enquirer, FlyN-Nick, and Exr0n. </p>
+            className={`slideout ${this.state.anim}`}>/kôrˈsôrəs/ <br/>
+            <a href={"https://github.com/theenquirer/corsaurus"}>Made with ❤️</a> by Enquirer, FlyN-Nick, and Exr0n.</p>
 		    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
 			<Search
 			    set={this.setData}

@@ -104,13 +104,17 @@ h1 {
     font-size: 12px;
     justify-content: center;
     text-align: center;
-    display: flex;
     margin-top: -25px;
     color: #878787;
     transition: 0.5s;
     transform: translate(0px, -20px);
     z-index: 10;
     opacity: 0;
+}
+
+.slideout a {
+    color: #878787;
+    text-decoration: underline;
 }
 
 .slide-anim {
