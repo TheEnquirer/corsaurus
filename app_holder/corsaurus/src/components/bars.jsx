@@ -32,7 +32,7 @@ class Bars extends Component
             return [item[0].replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }), item[1]]
         });
         //this.setState({data: processed, wid: widest});
-        this.setState({data: processed});
+	this.setState({data: processed, hovering: -1, copied: -1});
         this.wid = widest*12
     };
 
