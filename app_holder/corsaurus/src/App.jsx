@@ -41,7 +41,11 @@ class App extends Component
 			onMouseEnter={() => this.setState({anim: "slide-anim"})}
 			onMouseLeave={() => this.setState({anim: ""})}
 			>Corsaurus</h1>
-		    <p className={`slideout ${this.state.anim}`}> /kôrˈsôrəs/<br /> Made with ❤️ by Enquirer, FlyN-Nick, and Exr0n. </p>
+		    <p
+			onMouseEnter={() => this.setState({anim: "slide-anim"})}
+			onMouseLeave={() => this.setState({anim: ""})}
+            className={`slideout ${this.state.anim}`}
+            > /kôrˈsôrəs/<br /> Made with ❤️ by Enquirer, FlyN-Nick, and Exr0n. </p>
 		    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
 			<Search
 			    set={this.setData}
