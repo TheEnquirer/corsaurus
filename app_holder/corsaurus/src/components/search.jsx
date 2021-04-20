@@ -19,6 +19,7 @@ class Search extends Component
             inputval: "",
             prevSearch: "",
         };
+        this.num_changes = 0;
     }
 
     clearOnFirstEnter(e) {
@@ -86,7 +87,7 @@ class Search extends Component
         selection.addRange(range);
     }
 
-    parseString(v, innerHTMLSetter=null, target=null) 
+    parseString(v, innerHTMLSetter=null, target=null, cur_counter=null) 
     {
         let pos = [];
         let neg = [];
@@ -145,7 +146,8 @@ class Search extends Component
         if (mods.filter(v => v.length === 0).length) return [0, "Extraneous operator"]; // NOTE: this logic handled both here and in pusher
 
         // out of vocab hl
-        if (typeof innerHTMLSetter === 'function') 
+        console.log('vocab update', cur_counter, this.num_changes);
+        if (typeof cur_counter === 'number' && cur_counter == this.num_changes) 
             this.query({ 'mode': 'vocabcheck', 'words': mods })
                 .then((wear_a_mask) => {
                     // Array.from() on nodeList: https://stackoverflow.com/a/32767009
@@ -173,6 +175,8 @@ class Search extends Component
 
     handleTextChange(e) {
         setTimeout(() => {
+            this.num_changes += 1;
+            let prev_counter = this.num_changes;
             let pos = this.getCaretPosition(e.target);
             if (e.target.innerHTML.length === 1) {
                 e.target.innerHTML = '<span class="syntaxhlpos">' + e.target.innerHTML + '</span>';
@@ -184,11 +188,12 @@ class Search extends Component
         
             this.setState({inputval: val.toLowerCase()});
             let [ ok, g ] = this.parseString(this.state.inputval, (v) => {
-                e.target.innerHTML = v.replace(/ /g, '&nbsp;').replace(/<span&nbsp;class="syntaxhl(pos|neg|err)">/g, '<span class="syntaxhl$1">');
+                if (prev_counter == this.num_changes) 
+                    e.target.innerHTML = v.replace(/ /g, '&nbsp;').replace(/<span&nbsp;class="syntaxhl(pos|neg|err)">/g, '<span class="syntaxhl$1">');
                 this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
                 //if (e.target.innerHTML.length == 0)
                 //    e.target.innerHTML = '&nbsp;';
-            }, e.target);
+            }, e.target, prev_counter);
             if (!ok) this.setState({ 'errormsg': g }); // but then we clear the error with in the parse itself.... this should probably go in the parseString too
         }, 0);
     }
