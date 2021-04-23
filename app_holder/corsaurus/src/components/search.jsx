@@ -147,7 +147,7 @@ class Search extends Component
 
         // out of vocab hl
         console.log('vocab update', cur_counter, this.num_changes);
-        if (typeof cur_counter === 'number' && cur_counter == this.num_changes) 
+        if (typeof cur_counter === 'number' && cur_counter === this.num_changes) 
             this.query({ 'mode': 'vocabcheck', 'words': mods })
                 .then((wear_a_mask) => {
                     // Array.from() on nodeList: https://stackoverflow.com/a/32767009
@@ -188,7 +188,7 @@ class Search extends Component
         
             this.setState({inputval: val.toLowerCase()});
             let [ ok, g ] = this.parseString(this.state.inputval, (v) => {
-                if (prev_counter == this.num_changes) 
+                if (prev_counter === this.num_changes) 
                     e.target.innerHTML = v.replace(/ /g, '&nbsp;').replace(/<span&nbsp;class="syntaxhl(pos|neg|err)">/g, '<span class="syntaxhl$1">');
                 this.setCaretPosition(pos, e.target); // set cursor to one after the previous position (bc setting innerHTML pushes cursor to front)
                 //if (e.target.innerHTML.length == 0)
@@ -199,7 +199,7 @@ class Search extends Component
     }
 
     handleSubmit() {
-        if ((this.state.inputval !== this.state.prevSearch) && this.state.errormsg == "") {
+        if ((this.state.inputval !== this.state.prevSearch) && this.state.errormsg === "") {
             this.setState({prevSearch: this.state.inputval});
             let parsed = this.parseString(this.state.inputval);
             if (parsed[0] === 1) {
