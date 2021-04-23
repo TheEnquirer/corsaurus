@@ -17,9 +17,7 @@ Oh, and if you want to go back to prod mode:
 $ export FLASK_ENV=production
 
 In total:
-export FLASK_APP=backend.py
-export FLASK_ENV=development
-flask run
+export FLASK_APP=backend.py && export FLASK_ENV=development && flask run
 '''
 
 from flask import Flask, request, jsonify, redirect
