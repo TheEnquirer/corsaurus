@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import Bars from './components/bars.jsx';
 import Search from './components/search.jsx';
+import VecViewer from './components/VecViewer.jsx';
 import autoBind from 'react-autobind';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+
 
 class App extends Component 
 {
@@ -31,35 +34,46 @@ class App extends Component
 	this.setState({shown: num})
     }
 
-    render() 
+    render()
     {
+
 	//<a className="help-button" href="help">Help</a>
 	return (
-	    <div className="main">
-		<div className="sticky-top">
-		    <h1
-			onMouseEnter={() => this.setState({anim: "slide-anim"})}
-			onMouseLeave={() => this.setState({anim: ""})}
-			>Corsaurus</h1>
-		    <p
-			onMouseEnter={() => this.setState({anim: "slide-anim"})}
-			onMouseLeave={() => this.setState({anim: ""})}
-            className={`slideout ${this.state.anim}`}>/kôrˈsôrəs/ <br/>
-            <a 
-		href={"https://github.com/theenquirer/corsaurus"}
-		className="repo"
-	    >Made with ❤️</a> by Enquirer, FlyN-Nick, and Exr0n.</p>
-		    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-			<Search
-			    set={this.setData}
-			    setShown={this.setShown}
-			/>
-		    </div>
-		</div>
-		<div className="over-bars">
-		    <Bars data={this.state.data} shown={this.state.shown} setShown={this.setShown}/>
-		</div>
-	    </div>
+	    <Router>
+		<Switch>
+		    <Route path="/view" component={VecViewer} />
+		    <Route exact path="/" component={ () => {
+			return (
+			    <div className="main">
+				<div className="sticky-top">
+				    <h1
+					onMouseEnter={() => this.setState({anim: "slide-anim"})}
+					onMouseLeave={() => this.setState({anim: ""})}
+				    >Corsaurus</h1>
+				    <p
+					onMouseEnter={() => this.setState({anim: "slide-anim"})}
+					onMouseLeave={() => this.setState({anim: ""})}
+					className={`slideout ${this.state.anim}`}>/kôrˈsôrəs/ <br/>
+					<a 
+					    href={"https://github.com/theenquirer/corsaurus"}
+					    className="repo"
+					>Made with ❤️</a> by Enquirer, FlyN-Nick, and Exr0n.</p>
+				    <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+					<Search
+					    set={this.setData}
+					    setShown={this.setShown}
+					/>
+				    </div>
+				</div>
+				<div className="over-bars">
+				    <Bars data={this.state.data} shown={this.state.shown} setShown={this.setShown}/>
+				</div>
+			    </div>
+			)}
+
+			} />
+		</Switch>
+	    </Router>
 	)
 	//<footer className="footer">
 	//    <div className="footer-text">
