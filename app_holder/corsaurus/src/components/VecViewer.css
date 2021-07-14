@@ -1,0 +1,19 @@
+.r-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+
+}
+
+.r {
+    border: 0px solid teal;
+    width: 10px;
+    height: 80px;
+
+}
+
+.vword {
+    margin-right: 1rem;
+}
