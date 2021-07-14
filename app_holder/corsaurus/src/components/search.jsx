@@ -203,7 +203,7 @@ class Search extends Component
             this.setState({prevSearch: this.state.inputval});
             let parsed = this.parseString(this.state.inputval);
             if (parsed[0] === 1) {
-                this.queryNearestWordvecs( 
+                this.queryNearestWordvecs(
                     {
                         'num': 100,
                         'pos': parsed[1][0],

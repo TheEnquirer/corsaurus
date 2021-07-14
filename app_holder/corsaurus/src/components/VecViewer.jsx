@@ -12,19 +12,43 @@ class VecViewer extends Component
         autoBind(this);
 
         this.state = {
-            data: this.props.data,
+            data: [],
             mounted: false,
-            //shown: 1,
-            loading: true,
-            hovering: -1,
-            copied: -1,
+	    word: 'apple',
         };
 
     }
 
+    queryWordvecs(request)
+    {
+        this.query(request)
+            .then(data => {
+                this.setState({data: data})
+		console.log(data)
+            });
+    }
+
+    async query(req) {
+        return fetch('/query', { method: 'put', body: JSON.stringify(req) })
+            .then(res => res.json())
+            .then(data => {
+                if (data.hasOwnProperty('error'))
+                    throw data.error;
+                else
+                    return data.success;
+            })
+            .catch(console.error);
+    }
 
     componentDidMount() {
-        this.setState({mounted: true});
+	this.setState({mounted: true});
+	this.queryWordvecs(
+	    {
+		'mode': 'get_vector',
+		'word': this.state.word,
+	    }
+	);
+
     }
 
     render()

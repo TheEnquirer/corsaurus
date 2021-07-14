@@ -121,7 +121,7 @@ def query():
     elif mode == 'similar_vector':                                                      # find words similar to given vector
       res = vecto.similar_by_vector(content['vector'], content['num'])
     elif mode == 'get_vector':                                                          # get vector of a word
-      res = vecto[content['word']]
+      res = vecto[content['word']].tolist()
     elif mode == 'relationships':                                                       # get words that represent the relationships between words similar to a sum and the sum
       res = relationship_determiner(content['pos'], content['neg'], content['num'], content['relationship_num'])
     elif mode == 'vocabcheck':

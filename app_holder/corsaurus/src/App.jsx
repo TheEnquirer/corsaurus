@@ -7,14 +7,14 @@ import autoBind from 'react-autobind';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
 
-class App extends Component 
+class App extends Component
 {
-    constructor(props) 
+    constructor(props)
     {
 	super(props);
 	autoBind(this);
 
-	this.state = { 
+	this.state = {
 	    data: [],
 	    anim: "",
 	    shown: 1,
@@ -23,7 +23,7 @@ class App extends Component
 
     componentDidMount() {}
 
-    setData(data) 
+    setData(data)
     {
 	//console.log("setting", data)
 	this.setState({ data: data });
