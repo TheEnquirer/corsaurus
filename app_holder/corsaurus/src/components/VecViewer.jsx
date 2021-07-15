@@ -20,69 +20,8 @@ class VecViewer extends Component
 		//'man', 'woman', 'boy', 'girl', 'apple', 'orange', 'pear', 'avocado', 'tomato'
 		//'i', 'love', 'you',
 		//'mean', 'rude', 'horrible', 'nice', 'amazing'
-		'Acai',
-		'Apples',
-		'Apricots',
-		'Avocado',
-		'Ackee',
-		'Bananas',
-		'Bilberries',
-		'Blueberries',
-		'Blackberries',
-		'Boysenberries',
-		'Bread',
-		'fruit',
-		'Cantaloupes',
-		'(cantalope)',
-		'Chocolate-Fruit',
-		'Cherimoya',
-		'Cherries',
-		'Cranberries',
-		'Cucumbers',
-		'Currants',
-		'Dates',
-		'Durian',
-		'Eggplant',
-		'Elderberries',
-		'Figs',
-		'Gooseberries',
-		'Grapes',
-		'Grapefruit',
-		'Guava',
-		'Honeydew',
-		'melons',
-		'Horned',
-		'melon',
-		'(Kiwano)',
-		'Huckleberries',
-		'Ita',
-		'Palm',
-		'Jujubes',
-		'Kiwis',
-		'Durian.jpg',
-		'Kumquat',
-		'Lemons',
-		'Limes',
-		'Lychees',
-		'Mangos',
-		'Mangosteen',
-		'Mulberries',
-		'Muskmelon',
-		'Nectarines',
-		'Ogden',
-		'melons',
-		'Olives',
-		'Oranges',
-		'Papaya',
-		'Passion',
-		'fruit',
-		'Peaches',
-		'Pears',
-		'Peppers',
-		'Persimmon',
-		'Pineapple',
-		'Plums'
-
+		'Acai', 'Apples', 'Apricots', 'Avocado', 'Ackee', 'Bananas', 'Bilberries', 'Blueberries', 'Blackberries', 'Boysenberries', 'Bread', 'fruit', 'Cantaloupes', '(cantalope)', 'Chocolate-Fruit', 'Cherimoya', 'Cherries', 'Cranberries', 'Cucumbers', 'Currants', 'Dates', 'Durian', 'Eggplant', 
+		//'Elderberries', 'Figs', 'Gooseberries', 'Grapes', 'Grapefruit', 'Guava', 'Honeydew', 'melons', 'Horned', 'melon', '(Kiwano)', 'Huckleberries', 'Ita', 'Palm', 'Jujubes', 'Kiwis', 'Durian.jpg', 'Kumquat', 'Lemons', 'Limes', 'Lychees', 'Mangos', 'Mangosteen', 'Mulberries', 'Muskmelon', 'Nectarines', 'Ogden', 'melons', 'Olives', 'Oranges', 'Papaya', 'Passion', 'fruit', 'Peaches', 'Pears', 'Peppers', 'Persimmon', 'Pineapple', 'Plums'
 	    ]
 	};
 
@@ -141,7 +80,7 @@ class VecViewer extends Component
 		{this.state.words.map((word, i) => {
 		    return (
 			<div className="r-wrapper">
-			    <p className="vword"> {word} </p>
+			    {this.state.data[i]? <p className="vword"> {word} </p> : ""}
 			    {this.state.data[i]? this.state.data[i].map((v) => {
 				return (
 				    <div>
